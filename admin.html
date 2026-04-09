@@ -328,118 +328,107 @@
     <button class="tab-btn" onclick="switchTab('version')">🚀 Version Release</button>
   </div>
 
-  <!-- TAB: Licenses -->
   <div class="tab-pane active" id="tab-licenses">
-    <div class="stat-card" style="--accent-color:var(--accent)">
-      <div class="stat-label">Total Keys</div>
-      <div class="stat-val" id="s-total">0</div>
-    </div>
-    <div class="stat-card" style="--accent-color:var(--accent)">
-      <div class="stat-label">Active</div>
-      <div class="stat-val" style="color:var(--accent)" id="s-active">0</div>
-    </div>
-    <div class="stat-card" style="--accent-color:var(--warn)">
-      <div class="stat-label">Expiring Soon</div>
-      <div class="stat-val" style="color:var(--warn)" id="s-expiring">0</div>
-    </div>
-    <div class="stat-card" style="--accent-color:var(--danger)">
-      <div class="stat-label">Expired</div>
-      <div class="stat-val" style="color:var(--danger)" id="s-expired">0</div>
-    </div>
-    <div class="stat-card" style="--accent-color:var(--muted)">
-      <div class="stat-label">Inactive</div>
-      <div class="stat-val" style="color:var(--muted)" id="s-inactive">0</div>
-    </div>
-  </div>
-
-  <!-- Save banner -->
-  <div class="save-banner" id="saveBanner">
-    <div>⚠ <strong>Unsaved changes</strong> — Download the updated JSON and replace your GitHub file.</div>
-    <div style="display:flex;gap:8px">
-      <button class="btn btn-primary btn-sm" onclick="saveToGitHub()">☁ Save to GitHub</button>
-      <button class="btn btn-outline btn-sm" onclick="downloadJSON()">⬇ Backup</button>
-    </div>
-  </div>
-
-  <!-- Toolbar -->
-  <div class="toolbar">
-    <input class="search-box" id="searchBox" placeholder="Search by name, key, device ID..." oninput="renderTable()">
-    <select class="filter-sel" id="filterStatus" onchange="renderTable()">
-      <option value="all">All Status</option>
-      <option value="active">Active</option>
-      <option value="expiring">Expiring Soon</option>
-      <option value="expired">Expired</option>
-      <option value="inactive">Inactive</option>
-    </select>
-    <select class="filter-sel" id="sortBy" onchange="renderTable()">
-      <option value="created_desc">Newest First</option>
-      <option value="created_asc">Oldest First</option>
-      <option value="expiry_asc">Expiry ↑</option>
-      <option value="expiry_desc">Expiry ↓</option>
-      <option value="name_asc">Name A–Z</option>
-    </select>
-    <button class="btn btn-primary" onclick="openAddModal()">＋ New License</button>
-    <button class="btn btn-outline" onclick="loadFromURL()">↻ Reload JSON</button>
-  </div>
-
-  <!-- Table -->
-  <div class="table-wrap">
-    <table>
-      <thead>
-        <tr>
-          <th>#</th>
-          <th>User / Agent</th>
-          <th>License Key</th>
-          <th>Device ID</th>
-          <th>Created</th>
-          <th>Expiry</th>
-          <th>Status</th>
-          <th>Actions</th>
-        </tr>
-      </thead>
-      <tbody id="licenseTable">
-        <tr><td colspan="8"><div class="empty-state"><div class="icon">🔑</div>No licenses loaded. Click "Reload JSON" or add a new one.</div></td></tr>
-      </tbody>
-    </table>
-  </div>
-</div><!-- /tab-licenses -->
-
-<!-- TAB: Version Release -->
-<div class="tab-pane" id="tab-version">
-  <div class="ver-card">
-    <h2>🚀 Version <span>Release</span></h2>
-    <p>এখানে নতুন version number ও EXE download link দিন। Save করলে <code>version.json</code> GitHub এ update হবে এবং সব agent এর app পরের বার চালু হলে silent auto-update নেবে।</p>
-
-    <div class="ver-current">
-      <div>
-        <div class="label">Current Live Version</div>
-        <div class="val" id="verLiveVal">—</div>
+    <div class="stats-row">
+      <div class="stat-card" style="--accent-color:var(--accent)">
+        <div class="stat-label">Total Keys</div>
+        <div class="stat-val" id="s-total">0</div>
       </div>
-      <button class="btn btn-outline btn-sm" onclick="loadVersionJSON()">↻ Reload</button>
+      <div class="stat-card" style="--accent-color:var(--accent)">
+        <div class="stat-label">Active</div>
+        <div class="stat-val" style="color:var(--accent)" id="s-active">0</div>
+      </div>
+      <div class="stat-card" style="--accent-color:var(--warn)">
+        <div class="stat-label">Expiring Soon</div>
+        <div class="stat-val" style="color:var(--warn)" id="s-expiring">0</div>
+      </div>
+      <div class="stat-card" style="--accent-color:var(--danger)">
+        <div class="stat-label">Expired</div>
+        <div class="stat-val" style="color:var(--danger)" id="s-expired">0</div>
+      </div>
+      <div class="stat-card" style="--accent-color:var(--muted)">
+        <div class="stat-label">Inactive</div>
+        <div class="stat-val" style="color:var(--muted)" id="s-inactive">0</div>
+      </div>
     </div>
 
-    <div class="form-group">
-      <label style="font-family:var(--mono);font-size:.72rem;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;display:block;margin-bottom:7px">New Version Number *</label>
-      <input id="v-version" class="search-box" style="width:100%;margin-bottom:0" placeholder="e.g. 2.1.0" />
-    </div>
-    <div class="form-group" style="margin-top:14px">
-      <label style="font-family:var(--mono);font-size:.72rem;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;display:block;margin-bottom:7px">EXE Download URL *</label>
-      <input id="v-url" class="search-box" style="width:100%;margin-bottom:0" value="https://github.com/rncall/Dashboard/releases/latest/download/WA_CallRecorder.exe" />
-    </div>
-    <div class="form-group" style="margin-top:14px">
-      <label style="font-family:var(--mono);font-size:.72rem;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;display:block;margin-bottom:7px">Release Notes</label>
-      <textarea id="v-notes" class="ver-notes" placeholder="e.g. Bug fix, new feature…"></textarea>
+    <div class="save-banner" id="saveBanner">
+      <div>⚠ <strong>Unsaved changes</strong> — Download the updated JSON and replace your GitHub file.</div>
+      <div style="display:flex;gap:8px">
+        <button class="btn btn-primary btn-sm" onclick="saveToGitHub()">☁ Save to GitHub</button>
+        <button class="btn btn-outline btn-sm" onclick="downloadJSON()">⬇ Backup</button>
+      </div>
     </div>
 
-    <div style="margin-top:22px;display:flex;gap:10px;flex-wrap:wrap">
-      <button class="btn btn-primary" onclick="releaseVersion()">☁ Publish to GitHub</button>
-      <button class="btn btn-outline" onclick="loadVersionJSON()">↻ Reload Current</button>
+    <div class="toolbar">
+      <input class="search-box" id="searchBox" placeholder="Search by name, key, device ID..." oninput="renderTable()">
+      <select class="filter-sel" id="filterStatus" onchange="renderTable()">
+        <option value="all">All Status</option>
+        <option value="active">Active</option>
+        <option value="expiring">Expiring Soon</option>
+        <option value="expired">Expired</option>
+        <option value="inactive">Inactive</option>
+      </select>
+      <select class="filter-sel" id="sortBy" onchange="renderTable()">
+        <option value="created_desc">Newest First</option>
+        <option value="created_asc">Oldest First</option>
+        <option value="expiry_asc">Expiry ↑</option>
+        <option value="expiry_desc">Expiry ↓</option>
+        <option value="name_asc">Name A–Z</option>
+      </select>
+      <button class="btn btn-primary" onclick="openAddModal()">＋ New License</button>
+      <button class="btn btn-outline" onclick="loadFromURL()">↻ Reload JSON</button>
     </div>
-    <div id="verStatus" style="margin-top:14px;font-family:var(--mono);font-size:.82rem;min-height:20px"></div>
-  </div>
-</div><!-- /tab-version -->
 
-</div><!-- /wrap -->
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>User / Agent</th>
+            <th>License Key</th>
+            <th>Device ID</th>
+            <th>Created</th>
+            <th>Expiry</th>
+            <th>Status</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody id="licenseTable">
+          <tr><td colspan="8"><div class="empty-state"><div class="icon">🔑</div>No licenses loaded. Click "Reload JSON" or add a new one.</div></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div><div class="tab-pane" id="tab-version">
+    <div class="ver-card">
+      <h2>🚀 Version <span>Release</span></h2>
+      <p>নতুন version ও EXE link দিন। GitHub এ update হলে সব agent silent auto-update পাবে।</p>
+      <div class="ver-current">
+        <div>
+          <div class="label">Current Live Version</div>
+          <div class="val" id="verLiveVal">—</div>
+        </div>
+        <button class="btn btn-outline btn-sm" onclick="loadVersionJSON()">↻ Reload</button>
+      </div>
+      <div class="form-group">
+        <label>New Version Number *</label>
+        <input id="v-version" class="search-box" style="width:100%" placeholder="e.g. 2.1.0" />
+      </div>
+      <div class="form-group" style="margin-top:14px">
+        <label>EXE Download URL *</label>
+        <input id="v-url" class="search-box" style="width:100%" value="https://github.com/rncall/Dashboard/releases/latest/download/WA_CallRecorder.exe" />
+      </div>
+      <div class="form-group" style="margin-top:14px">
+        <label>Release Notes</label>
+        <textarea id="v-notes" class="ver-notes" placeholder="e.g. Bug fix, new feature…"></textarea>
+      </div>
+      <div style="margin-top:22px;display:flex;gap:10px">
+        <button class="btn btn-primary" onclick="releaseVersion()">☁ Publish to GitHub</button>
+        <button class="btn btn-outline" onclick="loadVersionJSON()">↻ Reload Current</button>
+      </div>
+      <div id="verStatus" style="margin-top:14px;font-family:var(--mono);font-size:.82rem;min-height:20px"></div>
+    </div>
+  </div></div>
 
 <!-- Add/Edit Modal -->
 <div class="modal-overlay" id="addModal">
