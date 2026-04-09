@@ -302,7 +302,10 @@
   <!-- Save banner -->
   <div class="save-banner" id="saveBanner">
     <div>⚠ <strong>Unsaved changes</strong> — Download the updated JSON and replace your GitHub file.</div>
-    <button class="btn btn-primary btn-sm" onclick="downloadJSON()">⬇ Download licenses.json</button>
+    <div style="display:flex;gap:8px">
+      <button class="btn btn-primary btn-sm" onclick="saveToGitHub()">☁ Save to GitHub</button>
+      <button class="btn btn-outline btn-sm" onclick="downloadJSON()">⬇ Backup</button>
+    </div>
   </div>
 
   <!-- Toolbar -->
@@ -386,14 +389,74 @@
   </div>
 </div>
 
+<!-- Token Modal -->
+<div class="modal-overlay" id="tokenModal">
+  <div class="modal" style="max-width:420px">
+    <h2>GitHub <span>Token</span></h2>
+    <p style="font-size:.85rem;color:var(--muted);margin-bottom:20px;line-height:1.6">
+      Token শুধু এই browser session এ থাকবে — page বন্ধ করলে মুছে যাবে।
+      Code বা GitHub এ কোথাও save হয় না।
+    </p>
+    <div class="form-group">
+      <label>Personal Access Token (repo scope)</label>
+      <input id="tokenInput" type="password" placeholder="ghp_xxxxxxxxxxxx" />
+    </div>
+    <p style="font-size:.75rem;color:var(--muted);margin-bottom:4px">
+      Token পেতে: GitHub → Settings → Developer Settings → Personal Access Tokens → Tokens (classic) → <strong>repo</strong> scope
+    </p>
+    <div id="tokenError" style="color:var(--danger);font-size:.82rem;margin:8px 0;min-height:18px"></div>
+    <div class="modal-footer">
+      <button class="btn btn-outline" onclick="document.getElementById('tokenModal').classList.remove('open')">Cancel</button>
+      <button class="btn btn-primary" id="tokenSaveBtn">Verify & Continue</button>
+    </div>
+  </div>
+</div>
+
 <div id="toast">✓ <span id="toastMsg">Copied!</span></div>
 
+
 <script>
+// ── Config (কোনো secret নেই এখানে) ───────────────────────────
+const LICENSE_URL  = 'https://rncall.github.io/licenses.json';
+const GITHUB_REPO  = 'rncall/rncall.github.io';
+const GITHUB_FILE  = 'licenses.json';
+
+// Token browser session এ থাকে — code এ না
+function getToken() {
+  return sessionStorage.getItem('gh_token') || '';
+}
+function setToken(t) {
+  sessionStorage.setItem('gh_token', t);
+}
+
 // ── State ─────────────────────────────────────────────────────
-const LICENSE_URL = 'https://rncall.github.io/Dashboard/licenses.json';
-let licenses = [];
+let licenses  = [];
 let editIndex = null;
 let unsaved   = false;
+
+// ── Token Setup Modal ─────────────────────────────────────────
+function showTokenModal(onSuccess) {
+  const overlay = document.getElementById('tokenModal');
+  overlay.classList.add('open');
+  document.getElementById('tokenInput').value = '';
+  document.getElementById('tokenError').textContent = '';
+  document.getElementById('tokenSaveBtn').onclick = async () => {
+    const t = document.getElementById('tokenInput').value.trim();
+    if (!t) { document.getElementById('tokenError').textContent = 'Token required.'; return; }
+    // quick verify
+    document.getElementById('tokenError').textContent = 'Verifying…';
+    try {
+      const r = await fetch(`https://api.github.com/repos/${GITHUB_REPO}`,
+        { headers: { 'Authorization': `token ${t}` } });
+      if (!r.ok) throw new Error('Invalid token or no repo access.');
+      setToken(t);
+      overlay.classList.remove('open');
+      onSuccess();
+    } catch(e) {
+      document.getElementById('tokenError').textContent = '❌ ' + e.message;
+    }
+  };
+}
 
 // ── Load ──────────────────────────────────────────────────────
 async function loadFromURL() {
@@ -402,13 +465,12 @@ async function loadFromURL() {
     const r = await fetch(LICENSE_URL + '?t=' + Date.now());
     if (!r.ok) throw new Error('HTTP ' + r.status);
     licenses = await r.json();
-    // migrate old format
-    licenses = licenses.map((l, i) => ({
+    licenses = licenses.map(l => ({
       ...l,
       device_id: l.device_id ? String(l.device_id) : null,
-      created: l.created || new Date().toISOString().slice(0,10),
-      note: l.note || l.notes || '',
-      user: l.user || l.agent_name || 'Unknown',
+      created:   l.created || new Date().toISOString().slice(0,10),
+      note:      l.note || l.notes || '',
+      user:      l.user || l.agent_name || 'Unknown',
     }));
     unsaved = false;
     document.getElementById('saveBanner').classList.remove('show');
@@ -618,27 +680,67 @@ function markUnsaved() {
   document.getElementById('saveBanner').classList.add('show');
 }
 
-// ── Download ──────────────────────────────────────────────────
+// ── Save to GitHub ────────────────────────────────────────────
+function saveToGitHub() {
+  const token = getToken();
+  if (!token) { showTokenModal(() => saveToGitHub()); return; }
+  _doSave(token);
+}
+
+async function _doSave(token) {
+  const clean = licenses.map(l => ({
+    key: l.key, expiry: l.expiry,
+    device_id: l.device_id || null, active: l.active,
+    user: l.user, note: l.note || '',
+    created: l.created || new Date().toISOString().slice(0,10),
+  }));
+  const content = btoa(unescape(encodeURIComponent(JSON.stringify(clean, null, 2))));
+  try {
+    showToast('Saving to GitHub…');
+    const shaRes = await fetch(
+      `https://api.github.com/repos/${GITHUB_REPO}/contents/${GITHUB_FILE}`,
+      { headers: { 'Authorization': `token ${token}` } }
+    );
+    if (shaRes.status === 401) {
+      sessionStorage.removeItem('gh_token');
+      showToast('❌ Token expired. Please re-enter.');
+      showTokenModal(() => saveToGitHub()); return;
+    }
+    const sha = (await shaRes.json()).sha;
+    const res = await fetch(
+      `https://api.github.com/repos/${GITHUB_REPO}/contents/${GITHUB_FILE}`,
+      {
+        method: 'PUT',
+        headers: { 'Authorization': `token ${token}`, 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          message: `Update licenses · ${new Date().toLocaleString()}`,
+          content, sha,
+        })
+      }
+    );
+    if (res.ok) {
+      unsaved = false;
+      document.getElementById('saveBanner').classList.remove('show');
+      document.getElementById('lastSaved').textContent = '✅ Saved to GitHub · ' + new Date().toLocaleTimeString();
+      showToast('✅ Saved to GitHub!');
+    } else {
+      const err = await res.json();
+      showToast('❌ ' + (err.message || 'Save failed'));
+    }
+  } catch(e) { showToast('❌ ' + e.message); }
+}
+
+// Backup download
 function downloadJSON() {
   const clean = licenses.map(l => ({
-    key:       l.key,
-    expiry:    l.expiry,
-    device_id: l.device_id || null,
-    active:    l.active,
-    user:      l.user,
-    note:      l.note || '',
-    created:   l.created || new Date().toISOString().slice(0,10),
+    key: l.key, expiry: l.expiry, device_id: l.device_id || null,
+    active: l.active, user: l.user, note: l.note || '',
+    created: l.created || new Date().toISOString().slice(0,10),
   }));
   const blob = new Blob([JSON.stringify(clean, null, 2)], {type:'application/json'});
-  const a    = document.createElement('a');
-  a.href     = URL.createObjectURL(blob);
-  a.download = 'licenses.json';
-  a.click();
-  unsaved = false;
-  document.getElementById('saveBanner').classList.remove('show');
-  document.getElementById('lastSaved').textContent =
-    'Downloaded · ' + new Date().toLocaleTimeString() + ' — Upload to GitHub to apply';
-  showToast('✅ licenses.json downloaded!');
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob); a.download = 'licenses.json'; a.click();
+  showToast('✅ Downloaded as backup');
 }
 
 // ── Utilities ─────────────────────────────────────────────────
