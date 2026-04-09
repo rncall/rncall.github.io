@@ -21,7 +21,7 @@
     "key": "RNC-N9UC-929E-AS4H",
     "expiry": "2027-04-09",
     "device_id": "12345678",
-    "active": false,
+    "active": true,
     "user": "Mehedee",
     "note": "Test purpose",
     "created": "2026-04-09"
