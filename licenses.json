@@ -1,0 +1,29 @@
+[
+  {
+    "key": "RNC-2026-ABCD",
+    "expiry": "2026-12-31",
+    "device_id": "575F7940288325C2",
+    "active": true,
+    "user": "Mohsin",
+    "note": "",
+    "created": "2026-04-09"
+  },
+  {
+    "key": "RNC-2026-EFGH",
+    "expiry": "2026-12-31",
+    "device_id": null,
+    "active": true,
+    "user": "Agent_02",
+    "note": "",
+    "created": "2026-04-09"
+  },
+  {
+    "key": "RNC-N9UC-929E-AS4H",
+    "expiry": "2027-04-09",
+    "device_id": "12345678",
+    "active": true,
+    "user": "Mehedee",
+    "note": "Test purpose",
+    "created": "2026-04-09"
+  }
+]
