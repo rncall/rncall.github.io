@@ -18,38 +18,11 @@
     "created": "2026-04-11"
   },
   {
-    "key": "RNC-FYTY-9JZ6-6T8R",
-    "user": "Sharmin",
-    "device_id": "B2CC19355ADD5516",
-    "expiry": "2027-04-11",
-    "active": true,
-    "note": "Auto-approved",
-    "created": "2026-04-11"
-  },
-  {
-    "key": "RNC-5MJP-9CUM-HWQT",
-    "user": "Sharmin",
-    "device_id": "B2CC19355ADD5516",
-    "expiry": "2027-04-11",
-    "active": true,
-    "note": "Auto-approved",
-    "created": "2026-04-11"
-  },
-  {
-    "key": "RNC-4VYW-7UB8-3UBL",
-    "user": "Sharmin",
-    "device_id": "B2CC19355ADD5516",
-    "expiry": "2027-04-11",
-    "active": true,
-    "note": "Auto-approved",
-    "created": "2026-04-11"
-  },
-  {
     "key": "RNC-QJKL-BJ9S-QD7G",
-    "user": "Sharmin",
-    "device_id": "B2CC19355ADD5516",
     "expiry": "2027-04-11",
+    "device_id": "B2CC19355ADD5516",
     "active": true,
+    "user": "Sharmin",
     "note": "Auto-approved",
     "created": "2026-04-11"
   }
