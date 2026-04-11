@@ -25,5 +25,14 @@
     "active": true,
     "note": "Auto-approved",
     "created": "2026-04-11"
+  },
+  {
+    "key": "RNC-5MJP-9CUM-HWQT",
+    "user": "Sharmin",
+    "device_id": "B2CC19355ADD5516",
+    "expiry": "2027-04-11",
+    "active": true,
+    "note": "Auto-approved",
+    "created": "2026-04-11"
   }
 ]
