@@ -262,51 +262,49 @@
     td:nth-child(5), th:nth-child(5) { display: none; }
   }
 
-  /* Tabs */
-  .tab-bar {
-    display: flex; gap: 4px;
-    border-bottom: 1px solid var(--border);
-    margin-bottom: 28px;
-  }
-  .tab-btn {
-    padding: 10px 20px; background: none; border: none;
-    font-family: var(--sans); font-size: 0.88rem; font-weight: 700;
-    color: var(--muted); cursor: pointer;
-    border-bottom: 2px solid transparent; margin-bottom: -1px;
-    transition: all .15s;
-  }
-  .tab-btn.active { color: var(--accent); border-bottom-color: var(--accent); }
-  .tab-btn:hover:not(.active) { color: var(--text); }
-  .tab-pane { display: none; }
-  .tab-pane.active { display: block; }
+  /* ── Tabs ── */
+  .tab-bar { display:flex; gap:4px; border-bottom:1px solid var(--border); margin-bottom:28px; }
+  .tab-btn { padding:10px 20px; background:none; border:none; font-family:var(--sans);
+    font-size:.88rem; font-weight:700; color:var(--muted); cursor:pointer;
+    border-bottom:2px solid transparent; margin-bottom:-1px; transition:all .15s; }
+  .tab-btn.active { color:var(--accent); border-bottom-color:var(--accent); }
+  .tab-btn:hover:not(.active) { color:var(--text); }
+  .tab-pane { display:none; }
+  .tab-pane.active { display:block; }
 
-  /* Version panel */
-  .ver-card {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 12px; padding: 28px 32px;
-    max-width: 560px;
-  }
-  .ver-card h2 { font-size: 1.1rem; font-weight: 800; margin-bottom: 6px; }
-  .ver-card h2 span { color: var(--accent); }
-  .ver-card p  { font-size: .82rem; color: var(--muted); margin-bottom: 24px; line-height: 1.6; }
-  .ver-current {
-    background: var(--surface2); border: 1px solid var(--border);
-    border-radius: 8px; padding: 14px 18px; margin-bottom: 24px;
-    font-family: var(--mono); font-size: .85rem;
-    display: flex; align-items: center; justify-content: space-between;
-  }
-  .ver-current .label { color: var(--muted); font-size: .7rem; text-transform: uppercase; letter-spacing: .06em; margin-bottom: 4px; }
-  .ver-current .val   { font-size: 1.1rem; font-weight: 700; color: var(--accent); }
-  .ver-notes {
-    width: 100%; background: var(--surface2);
-    border: 1px solid var(--border); border-radius: 8px;
-    padding: 10px 14px; color: var(--text);
-    font-family: var(--mono); font-size: .85rem;
-    outline: none; resize: vertical; min-height: 70px;
-    transition: border-color .2s;
-  }
-  .ver-notes:focus { border-color: var(--accent); }
+  /* ── Version Panel ── */
+  .ver-card { background:var(--surface); border:1px solid var(--border); border-radius:12px;
+    padding:28px 32px; max-width:560px; }
+  .ver-card h2 { font-size:1.1rem; font-weight:800; margin-bottom:6px; }
+  .ver-card h2 span { color:var(--accent); }
+  .ver-card p { font-size:.82rem; color:var(--muted); margin-bottom:24px; line-height:1.6; }
+  .ver-current { background:var(--surface2); border:1px solid var(--border); border-radius:8px;
+    padding:14px 18px; margin-bottom:24px; font-family:var(--mono); font-size:.85rem;
+    display:flex; align-items:center; justify-content:space-between; }
+  .ver-current .label { color:var(--muted); font-size:.7rem; text-transform:uppercase;
+    letter-spacing:.06em; margin-bottom:4px; }
+  .ver-current .val { font-size:1.1rem; font-weight:700; color:var(--accent); }
+  .ver-notes { width:100%; background:var(--surface2); border:1px solid var(--border);
+    border-radius:8px; padding:10px 14px; color:var(--text); font-family:var(--mono);
+    font-size:.85rem; outline:none; resize:vertical; min-height:70px; transition:border-color .2s; }
+  .ver-notes:focus { border-color:var(--accent); }
+
+  /* ── Requests Panel ── */
+  .req-card { background:var(--surface); border:1px solid var(--border); border-radius:12px;
+    padding:24px 28px; }
+  .req-card h2 { font-size:1.1rem; font-weight:800; margin-bottom:6px; }
+  .req-card h2 span { color:var(--warn); }
+  .req-badge { display:inline-flex; align-items:center; gap:5px; padding:3px 10px;
+    border-radius:20px; font-family:var(--mono); font-size:.72rem; font-weight:600; }
+  .req-badge-pending { background:rgba(255,107,53,.12); color:var(--warn); }
+  .req-badge-approved { background:rgba(0,229,160,.12); color:var(--accent); }
+  .req-row { display:flex; align-items:center; gap:12px; padding:14px 16px;
+    border-bottom:1px solid var(--border); flex-wrap:wrap; }
+  .req-row:last-child { border-bottom:none; }
+  .req-name { font-weight:700; font-size:.92rem; }
+  .req-did { font-family:var(--mono); font-size:.78rem; color:var(--muted); }
+  .req-date { font-family:var(--mono); font-size:.72rem; color:var(--muted); margin-left:auto; }
+
 </style>
 </head>
 <body>
@@ -322,87 +320,115 @@
     </div>
   </header>
 
-  <!-- Tab Bar -->
   <div class="tab-bar">
-    <button class="tab-btn active" onclick="switchTab('licenses')">🔑 Licenses</button>
-    <button class="tab-btn" onclick="switchTab('version')">🚀 Version Release</button>
+    <button class="tab-btn active" id="tbLic"  onclick="switchTab('licenses', this)">🔑 Licenses</button>
+    <button class="tab-btn"        id="tbReq"  onclick="switchTab('requests', this)">📨 Pending Requests <span id="reqBadgeCount" style="display:none;background:var(--warn);color:#000;border-radius:10px;padding:1px 7px;font-size:.7rem;margin-left:4px"></span></button>
+    <button class="tab-btn"        id="tbVer"  onclick="switchTab('version', this)">🚀 Version Release</button>
   </div>
 
   <div class="tab-pane active" id="tab-licenses">
-    <div class="stats-row">
-      <div class="stat-card" style="--accent-color:var(--accent)">
-        <div class="stat-label">Total Keys</div>
-        <div class="stat-val" id="s-total">0</div>
-      </div>
-      <div class="stat-card" style="--accent-color:var(--accent)">
-        <div class="stat-label">Active</div>
-        <div class="stat-val" style="color:var(--accent)" id="s-active">0</div>
-      </div>
-      <div class="stat-card" style="--accent-color:var(--warn)">
-        <div class="stat-label">Expiring Soon</div>
-        <div class="stat-val" style="color:var(--warn)" id="s-expiring">0</div>
-      </div>
-      <div class="stat-card" style="--accent-color:var(--danger)">
-        <div class="stat-label">Expired</div>
-        <div class="stat-val" style="color:var(--danger)" id="s-expired">0</div>
-      </div>
-      <div class="stat-card" style="--accent-color:var(--muted)">
-        <div class="stat-label">Inactive</div>
-        <div class="stat-val" style="color:var(--muted)" id="s-inactive">0</div>
-      </div>
+  <div class="stats-row">
+    <div class="stat-card" style="--accent-color:var(--accent)">
+      <div class="stat-label">Total Keys</div>
+      <div class="stat-val" id="s-total">0</div>
     </div>
+    <div class="stat-card" style="--accent-color:var(--accent)">
+      <div class="stat-label">Active</div>
+      <div class="stat-val" style="color:var(--accent)" id="s-active">0</div>
+    </div>
+    <div class="stat-card" style="--accent-color:var(--warn)">
+      <div class="stat-label">Expiring Soon</div>
+      <div class="stat-val" style="color:var(--warn)" id="s-expiring">0</div>
+    </div>
+    <div class="stat-card" style="--accent-color:var(--danger)">
+      <div class="stat-label">Expired</div>
+      <div class="stat-val" style="color:var(--danger)" id="s-expired">0</div>
+    </div>
+    <div class="stat-card" style="--accent-color:var(--muted)">
+      <div class="stat-label">Inactive</div>
+      <div class="stat-val" style="color:var(--muted)" id="s-inactive">0</div>
+    </div>
+  </div>
 
-    <div class="save-banner" id="saveBanner">
-      <div>⚠ <strong>Unsaved changes</strong> — Download the updated JSON and replace your GitHub file.</div>
-      <div style="display:flex;gap:8px">
-        <button class="btn btn-primary btn-sm" onclick="saveToGitHub()">☁ Save to GitHub</button>
-        <button class="btn btn-outline btn-sm" onclick="downloadJSON()">⬇ Backup</button>
+  <!-- Save banner -->
+  <div class="save-banner" id="saveBanner">
+    <div>⚠ <strong>Unsaved changes</strong> — Download the updated JSON and replace your GitHub file.</div>
+    <div style="display:flex;gap:8px">
+      <button class="btn btn-primary btn-sm" onclick="saveToGitHub()">☁ Save to GitHub</button>
+      <button class="btn btn-outline btn-sm" onclick="downloadJSON()">⬇ Backup</button>
+    </div>
+  </div>
+
+  <!-- Toolbar -->
+  <div class="toolbar">
+    <input class="search-box" id="searchBox" placeholder="Search by name, key, device ID..." oninput="renderTable()">
+    <select class="filter-sel" id="filterStatus" onchange="renderTable()">
+      <option value="all">All Status</option>
+      <option value="active">Active</option>
+      <option value="expiring">Expiring Soon</option>
+      <option value="expired">Expired</option>
+      <option value="inactive">Inactive</option>
+    </select>
+    <select class="filter-sel" id="sortBy" onchange="renderTable()">
+      <option value="created_desc">Newest First</option>
+      <option value="created_asc">Oldest First</option>
+      <option value="expiry_asc">Expiry ↑</option>
+      <option value="expiry_desc">Expiry ↓</option>
+      <option value="name_asc">Name A–Z</option>
+    </select>
+    <button class="btn btn-primary" onclick="openAddModal()">＋ New License</button>
+    <button class="btn btn-outline" onclick="loadFromURL()">↻ Reload JSON</button>
+  </div>
+
+  <!-- Table -->
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>User / Agent</th>
+          <th>License Key</th>
+          <th>Device ID</th>
+          <th>Created</th>
+          <th>Expiry</th>
+          <th>Status</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody id="licenseTable">
+        <tr><td colspan="8"><div class="empty-state"><div class="icon">🔑</div>No licenses loaded. Click "Reload JSON" or add a new one.</div></td></tr>
+      </tbody>
+    </table>
+  </div>
+  </div><!-- /tab-licenses -->
+
+  <!-- TAB: Pending Requests -->
+  <div class="tab-pane" id="tab-requests">
+    <div class="req-card">
+      <h2>📨 Pending <span>Requests</span></h2>
+      <p style="font-size:.82rem;color:var(--muted);margin-bottom:18px;line-height:1.6">
+        Agent রা যখন Auto-Request পাঠায়, এখানে দেখা যাবে।
+        Device ID already filled থাকবে — শুধু expiry দিয়ে Approve করুন।
+      </p>
+      <div style="display:flex;gap:10px;margin-bottom:18px;flex-wrap:wrap">
+        <button class="btn btn-outline btn-sm" onclick="loadRequests()">↻ Reload</button>
+      </div>
+      <div id="reqTableWrap" class="table-wrap">
+        <table><thead><tr>
+          <th>Agent Name</th><th>Device ID</th><th>Requested</th><th>Status</th><th>Action</th>
+        </tr></thead>
+        <tbody id="reqTable">
+          <tr><td colspan="5"><div class="empty-state"><div class="icon">📭</div>Click Reload to fetch requests.</div></td></tr>
+        </tbody></table>
       </div>
     </div>
+  </div><!-- /tab-requests -->
 
-    <div class="toolbar">
-      <input class="search-box" id="searchBox" placeholder="Search by name, key, device ID..." oninput="renderTable()">
-      <select class="filter-sel" id="filterStatus" onchange="renderTable()">
-        <option value="all">All Status</option>
-        <option value="active">Active</option>
-        <option value="expiring">Expiring Soon</option>
-        <option value="expired">Expired</option>
-        <option value="inactive">Inactive</option>
-      </select>
-      <select class="filter-sel" id="sortBy" onchange="renderTable()">
-        <option value="created_desc">Newest First</option>
-        <option value="created_asc">Oldest First</option>
-        <option value="expiry_asc">Expiry ↑</option>
-        <option value="expiry_desc">Expiry ↓</option>
-        <option value="name_asc">Name A–Z</option>
-      </select>
-      <button class="btn btn-primary" onclick="openAddModal()">＋ New License</button>
-      <button class="btn btn-outline" onclick="loadFromURL()">↻ Reload JSON</button>
-    </div>
-
-    <div class="table-wrap">
-      <table>
-        <thead>
-          <tr>
-            <th>#</th>
-            <th>User / Agent</th>
-            <th>License Key</th>
-            <th>Device ID</th>
-            <th>Created</th>
-            <th>Expiry</th>
-            <th>Status</th>
-            <th>Actions</th>
-          </tr>
-        </thead>
-        <tbody id="licenseTable">
-          <tr><td colspan="8"><div class="empty-state"><div class="icon">🔑</div>No licenses loaded. Click "Reload JSON" or add a new one.</div></td></tr>
-        </tbody>
-      </table>
-    </div>
-  </div><div class="tab-pane" id="tab-version">
+  <!-- TAB: Version Release -->
+  <div class="tab-pane" id="tab-version">
     <div class="ver-card">
       <h2>🚀 Version <span>Release</span></h2>
-      <p>নতুন version ও EXE link দিন। GitHub এ update হলে সব agent silent auto-update পাবে।</p>
+      <p>নতুন version number ও EXE link দিন। Save করলে <code>version.json</code> GitHub এ update হবে এবং সব agent এর app silent auto-update নেবে।</p>
       <div class="ver-current">
         <div>
           <div class="label">Current Live Version</div>
@@ -411,24 +437,26 @@
         <button class="btn btn-outline btn-sm" onclick="loadVersionJSON()">↻ Reload</button>
       </div>
       <div class="form-group">
-        <label>New Version Number *</label>
-        <input id="v-version" class="search-box" style="width:100%" placeholder="e.g. 2.1.0" />
+        <label style="font-family:var(--mono);font-size:.72rem;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;display:block;margin-bottom:7px">New Version Number *</label>
+        <input id="v-version" class="search-box" style="width:100%;margin-bottom:0" placeholder="e.g. 2.1.0" />
       </div>
       <div class="form-group" style="margin-top:14px">
-        <label>EXE Download URL *</label>
-        <input id="v-url" class="search-box" style="width:100%" value="https://github.com/rncall/Dashboard/releases/latest/download/WA_CallRecorder.exe" />
+        <label style="font-family:var(--mono);font-size:.72rem;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;display:block;margin-bottom:7px">EXE Download URL *</label>
+        <input id="v-url" class="search-box" style="width:100%;margin-bottom:0" value="https://github.com/rncall/Dashboard/releases/latest/download/WA_CallRecorder.exe" />
       </div>
       <div class="form-group" style="margin-top:14px">
-        <label>Release Notes</label>
-        <textarea id="v-notes" class="ver-notes" placeholder="e.g. Bug fix, new feature…"></textarea>
+        <label style="font-family:var(--mono);font-size:.72rem;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;display:block;margin-bottom:7px">Release Notes</label>
+        <textarea id="v-notes" class="ver-notes" placeholder="e.g. Bug fix, new feature..."></textarea>
       </div>
-      <div style="margin-top:22px;display:flex;gap:10px">
+      <div style="margin-top:22px;display:flex;gap:10px;flex-wrap:wrap">
         <button class="btn btn-primary" onclick="releaseVersion()">☁ Publish to GitHub</button>
         <button class="btn btn-outline" onclick="loadVersionJSON()">↻ Reload Current</button>
       </div>
       <div id="verStatus" style="margin-top:14px;font-family:var(--mono);font-size:.82rem;min-height:20px"></div>
     </div>
-  </div></div>
+  </div><!-- /tab-version -->
+
+</div>
 
 <!-- Add/Edit Modal -->
 <div class="modal-overlay" id="addModal">
@@ -487,6 +515,33 @@
     <div class="modal-footer">
       <button class="btn btn-outline" onclick="document.getElementById('tokenModal').classList.remove('open')">Cancel</button>
       <button class="btn btn-primary" id="tokenSaveBtn">Verify & Continue</button>
+    </div>
+  </div>
+</div>
+
+
+<!-- Approve Request Modal -->
+<div class="modal-overlay" id="approveModal">
+  <div class="modal" style="max-width:460px">
+    <h2>✅ Approve <span>Request</span></h2>
+    <div style="background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:14px 16px;margin-bottom:18px">
+      <div style="font-family:var(--mono);font-size:.7rem;color:var(--muted);text-transform:uppercase;margin-bottom:4px">Agent</div>
+      <div style="font-weight:700;font-size:1rem" id="ap-name"></div>
+      <div style="font-family:var(--mono);font-size:.75rem;color:var(--muted);margin-top:4px" id="ap-device"></div>
+      <input type="hidden" id="ap-device-hidden" />
+    </div>
+    <div class="form-group">
+      <label>Expiry Date *</label>
+      <input type="date" id="ap-expiry" />
+    </div>
+    <div class="form-group">
+      <label>Notes (optional)</label>
+      <input id="ap-note" placeholder="e.g. Customer Support Team" />
+    </div>
+    <div id="apStatus" style="font-family:var(--mono);font-size:.82rem;min-height:18px;margin-bottom:8px"></div>
+    <div class="modal-footer">
+      <button class="btn btn-outline" onclick="closeApproveModal()">Cancel</button>
+      <button class="btn btn-primary" onclick="doApprove()">✅ Approve & Generate Key</button>
     </div>
   </div>
 </div>
@@ -846,17 +901,144 @@ document.getElementById('addModal').addEventListener('click', e => {
 });
 
 // ── Tab Switching ─────────────────────────────────────────────
-function switchTab(name) {
+function switchTab(name, btnEl) {
   document.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('active'));
   document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
   document.getElementById('tab-' + name).classList.add('active');
-  event.currentTarget.classList.add('active');
-  if (name === 'version') loadVersionJSON();
+  if (btnEl) btnEl.classList.add('active');
+  if (name === 'version')  loadVersionJSON();
+  if (name === 'requests') loadRequests();
 }
 
+// ── Pending Requests ──────────────────────────────────────────
+const REQUESTS_URL  = 'https://rncall.github.io/requests.json';
+const REQUESTS_FILE = 'requests.json';
+
+async function loadRequests() {
+  document.getElementById('reqTable').innerHTML =
+    '<tr><td colspan="5" style="text-align:center;padding:20px;color:var(--muted)">Loading...</td></tr>';
+  try {
+    const r = await fetch(REQUESTS_URL + '?t=' + Date.now());
+    if (!r.ok) throw new Error('HTTP ' + r.status);
+    const reqs = await r.json();
+    const pending = reqs.filter(r => r.status === 'pending');
+    // update badge
+    const badge = document.getElementById('reqBadgeCount');
+    if (pending.length > 0) { badge.textContent = pending.length; badge.style.display = 'inline'; }
+    else badge.style.display = 'none';
+    if (!reqs.length) {
+      document.getElementById('reqTable').innerHTML =
+        '<tr><td colspan="5"><div class="empty-state"><div class="icon">📭</div>No requests yet.</div></td></tr>';
+      return;
+    }
+    document.getElementById('reqTable').innerHTML = reqs.map((req, i) => {
+      const isPending = req.status === 'pending';
+      const badge = isPending
+        ? '<span class="req-badge req-badge-pending">Pending</span>'
+        : '<span class="req-badge req-badge-approved">Approved</span>';
+      const action = isPending
+        ? `<button class="btn btn-primary btn-sm" onclick="openApproveModal(${i})">✅ Approve</button>`
+        : `<span style="color:var(--muted);font-size:.8rem">Done</span>`;
+      return `<tr>
+        <td><div class="req-name">${escHtml(req.agent_name||'')}</div></td>
+        <td><span class="req-did">${escHtml(req.device_id||'')}</span></td>
+        <td><span style="font-family:var(--mono);font-size:.78rem;color:var(--muted)">${escHtml(req.requested||'')}</span></td>
+        <td>${badge}</td>
+        <td>${action}</td>
+      </tr>`;
+    }).join('');
+    window._reqData = reqs;
+  } catch(e) {
+    document.getElementById('reqTable').innerHTML =
+      `<tr><td colspan="5"><div class="empty-state"><div class="icon">⚠</div>${e.message}</div></td></tr>`;
+  }
+}
+
+// ── Approve Modal ─────────────────────────────────────────────
+let _approveIdx = null;
+
+function openApproveModal(idx) {
+  _approveIdx = idx;
+  const req = window._reqData[idx];
+  document.getElementById('ap-name').textContent   = req.agent_name || '';
+  document.getElementById('ap-device').textContent = req.device_id  || '';
+  document.getElementById('ap-device-hidden').value = req.device_id || '';
+  // Default expiry = 1 year
+  const d = new Date(); d.setFullYear(d.getFullYear() + 1);
+  document.getElementById('ap-expiry').value = d.toISOString().slice(0, 10);
+  document.getElementById('ap-note').value   = '';
+  document.getElementById('apStatus').textContent = '';
+  document.getElementById('approveModal').classList.add('open');
+}
+
+function closeApproveModal() {
+  document.getElementById('approveModal').classList.remove('open');
+}
+
+async function doApprove() {
+  const token = getToken();
+  if (!token) { showTokenModal(() => doApprove()); return; }
+  const req    = window._reqData[_approveIdx];
+  const expiry = document.getElementById('ap-expiry').value;
+  const note   = document.getElementById('ap-note').value.trim();
+  if (!expiry) { document.getElementById('apStatus').textContent = 'Expiry date required.'; return; }
+
+  document.getElementById('apStatus').textContent = '⏳ Creating license...';
+
+  // 1. Generate license key and add to licenses.json
+  const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+  const seg = n => Array.from({length:n}, ()=>chars[Math.floor(Math.random()*chars.length)]).join('');
+  const newKey = `RNC-${seg(4)}-${seg(4)}-${seg(4)}`;
+
+  const headers = { 'Authorization': `token ${token}`, 'Content-Type': 'application/json' };
+
+  // Load licenses
+  const licRes = await fetch(`https://api.github.com/repos/${GITHUB_REPO}/contents/${GITHUB_FILE}`, {headers});
+  if (licRes.status === 401) { sessionStorage.removeItem('gh_token'); showTokenModal(() => doApprove()); return; }
+  const licData = await licRes.json();
+  const licSha  = licData.sha;
+  const licList = JSON.parse(atob(licData.content));
+
+  licList.push({
+    key: newKey, user: req.agent_name, device_id: req.device_id,
+    expiry, active: true, note: note || 'Auto-approved',
+    created: new Date().toISOString().slice(0,10),
+  });
+
+  const licContent = btoa(unescape(encodeURIComponent(JSON.stringify(licList, null, 2))));
+  const licPut = await fetch(`https://api.github.com/repos/${GITHUB_REPO}/contents/${GITHUB_FILE}`, {
+    method:'PUT', headers,
+    body: JSON.stringify({ message: `Approve: ${req.agent_name} (${req.device_id})`, content: licContent, sha: licSha })
+  });
+  if (!licPut.ok) { document.getElementById('apStatus').textContent = '❌ Failed to save license.'; return; }
+
+  // 2. Mark request as approved in requests.json
+  const reqRes = await fetch(`https://api.github.com/repos/${GITHUB_REPO}/contents/${REQUESTS_FILE}`, {headers});
+  const reqData = await reqRes.json();
+  const reqSha  = reqData.sha;
+  const reqList = JSON.parse(atob(reqData.content));
+  const ri = reqList.findIndex(r => r.device_id === req.device_id);
+  if (ri !== -1) { reqList[ri].status = 'approved'; reqList[ri].approved = new Date().toISOString().slice(0,10); }
+  const reqContent = btoa(unescape(encodeURIComponent(JSON.stringify(reqList, null, 2))));
+  await fetch(`https://api.github.com/repos/${GITHUB_REPO}/contents/${REQUESTS_FILE}`, {
+    method:'PUT', headers,
+    body: JSON.stringify({ message: `Approved: ${req.agent_name}`, content: reqContent, sha: reqSha })
+  });
+
+  document.getElementById('apStatus').textContent = `✅ Approved! Key: ${newKey}`;
+  showToast(`✅ Approved: ${req.agent_name} — Key: ${newKey}`);
+  // Reload data
+  licenses = licList; renderTable(); updateStats();
+  setTimeout(() => { closeApproveModal(); loadRequests(); }, 2000);
+}
+
+document.getElementById('approveModal').addEventListener('click', e => {
+  if (e.target === document.getElementById('approveModal')) closeApproveModal();
+});
+
 // ── Version Release ───────────────────────────────────────────
-const VERSION_URL   = 'https://rncall.github.io/version.json';
-const VERSION_FILE  = 'version.json';
+const VERSION_URL  = 'https://rncall.github.io/version.json';
+const VERSION_FILE = 'version.json';
 
 async function loadVersionJSON() {
   try {
@@ -877,66 +1059,39 @@ async function loadVersionJSON() {
 
 function setVerStatus(msg, color) {
   const el = document.getElementById('verStatus');
-  el.textContent = msg;
-  el.style.color = color || 'var(--muted)';
+  el.textContent = msg; el.style.color = color || 'var(--muted)';
 }
 
 async function releaseVersion() {
   const ver   = document.getElementById('v-version').value.trim();
   const url   = document.getElementById('v-url').value.trim();
   const notes = document.getElementById('v-notes').value.trim();
-
   if (!ver)  { setVerStatus('❌ Version number required.', 'var(--danger)'); return; }
   if (!url)  { setVerStatus('❌ Download URL required.', 'var(--danger)'); return; }
-  if (!/^\d+\.\d+\.\d+$/.test(ver)) {
-    setVerStatus('❌ Format হওয়া উচিত: 2.1.0', 'var(--danger)'); return;
-  }
-
+  if (!/^\d+\.\d+\.\d+$/.test(ver)) { setVerStatus('❌ Format: 2.1.0', 'var(--danger)'); return; }
   const token = getToken();
   if (!token) { showTokenModal(() => releaseVersion()); return; }
-
   setVerStatus('⏳ Publishing…', 'var(--muted)');
-
   const payload = { version: ver, download_url: url, release_notes: notes };
   const content = btoa(unescape(encodeURIComponent(JSON.stringify(payload, null, 2))));
-
   try {
-    // Get current SHA
-    const shaRes = await fetch(
-      `https://api.github.com/repos/${GITHUB_REPO}/contents/${VERSION_FILE}`,
-      { headers: { 'Authorization': `token ${token}` } }
-    );
-    if (shaRes.status === 401) {
-      sessionStorage.removeItem('gh_token');
-      setVerStatus('❌ Token expired.', 'var(--danger)');
-      showTokenModal(() => releaseVersion()); return;
-    }
+    const headers = { 'Authorization': `token ${token}`, 'Content-Type': 'application/json' };
+    const shaRes = await fetch(`https://api.github.com/repos/${GITHUB_REPO}/contents/${VERSION_FILE}`, {headers});
+    if (shaRes.status === 401) { sessionStorage.removeItem('gh_token'); showTokenModal(() => releaseVersion()); return; }
     const sha = (await shaRes.json()).sha;
-
-    // Push update
-    const res = await fetch(
-      `https://api.github.com/repos/${GITHUB_REPO}/contents/${VERSION_FILE}`,
-      {
-        method: 'PUT',
-        headers: { 'Authorization': `token ${token}`, 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          message: `Release v${ver} · ${new Date().toLocaleString()}`,
-          content, sha,
-        })
-      }
-    );
-
+    const res = await fetch(`https://api.github.com/repos/${GITHUB_REPO}/contents/${VERSION_FILE}`, {
+      method:'PUT', headers,
+      body: JSON.stringify({ message: `Release v${ver} · ${new Date().toLocaleString()}`, content, sha })
+    });
     if (res.ok) {
       document.getElementById('verLiveVal').textContent = ver;
-      setVerStatus(`✅ v${ver} successfully published! সব agent পরের বার app চালু করলে auto-update নেবে।`, 'var(--accent)');
+      setVerStatus(`✅ v${ver} published! সব agent পরের বার চালু করলে silent update নেবে।`, 'var(--accent)');
       showToast(`✅ Released v${ver}`);
     } else {
       const err = await res.json();
       setVerStatus('❌ ' + (err.message || 'Push failed'), 'var(--danger)');
     }
-  } catch(e) {
-    setVerStatus('❌ ' + e.message, 'var(--danger)');
-  }
+  } catch(e) { setVerStatus('❌ ' + e.message, 'var(--danger)'); }
 }
 
 // ── Init ──────────────────────────────────────────────────────
