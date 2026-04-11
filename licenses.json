@@ -16,5 +16,14 @@
     "user": "Mohsin",
     "note": "Mohsin",
     "created": "2026-04-11"
+  },
+  {
+    "key": "RNC-FYTY-9JZ6-6T8R",
+    "user": "Sharmin",
+    "device_id": "B2CC19355ADD5516",
+    "expiry": "2027-04-11",
+    "active": true,
+    "note": "Auto-approved",
+    "created": "2026-04-11"
   }
 ]
