@@ -7,5 +7,12 @@
     "first_seen": "2026-04-12 12:20",
     "last_seen": "2026-04-12 06:20",
     "version": "2.1.0"
+  },
+  {
+    "agent_name": "Sharmin",
+    "device_id": "B2CC19355ADD5516",
+    "status": "pending",
+    "requested": "2026-04-12 06:44",
+    "trial_start": "2026-04-12 06:44"
   }
 ]
