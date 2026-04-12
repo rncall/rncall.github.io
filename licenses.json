@@ -16,5 +16,50 @@
     "user": "Sharmin",
     "note": "Approved from Requests",
     "created": "2026-04-12"
+  },
+  {
+    "key": "RNC-VAQ9-VD3B-3TES",
+    "expiry": "2027-04-12",
+    "device_id": "C1CE16B0745110C5",
+    "active": true,
+    "user": "Ayon",
+    "note": "Approved from Requests",
+    "created": "2026-04-12"
+  },
+  {
+    "key": "RNC-33DP-9QVR-N4UP",
+    "expiry": "2027-04-12",
+    "device_id": "F92350EE6E731B03",
+    "active": true,
+    "user": "Rasel",
+    "note": "Approved from Requests",
+    "created": "2026-04-12"
+  },
+  {
+    "key": "RNC-3VEN-XWVZ-SPXB",
+    "expiry": "2027-04-12",
+    "device_id": "A4EEED88D1B0C508",
+    "active": true,
+    "user": "Shuvra",
+    "note": "Approved from Requests",
+    "created": "2026-04-12"
+  },
+  {
+    "key": "RNC-AKV4-MTWU-PGWP",
+    "expiry": "2027-04-12",
+    "device_id": "D2088133D7603B18",
+    "active": true,
+    "user": "Yamin",
+    "note": "Approved from Requests",
+    "created": "2026-04-12"
+  },
+  {
+    "key": "RNC-7VLP-XX3M-95MS",
+    "expiry": "2027-04-12",
+    "device_id": "AAA10F012E4CABB4",
+    "active": true,
+    "user": "Sajjad",
+    "note": "Approved from Requests",
+    "created": "2026-04-12"
   }
 ]
