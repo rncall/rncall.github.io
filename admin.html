@@ -262,49 +262,29 @@
     td:nth-child(5), th:nth-child(5) { display: none; }
   }
 
-  /* ── Tabs ── */
-  .tab-bar { display:flex; gap:4px; border-bottom:1px solid var(--border); margin-bottom:28px; }
-  .tab-btn { padding:10px 20px; background:none; border:none; font-family:var(--sans);
-    font-size:.88rem; font-weight:700; color:var(--muted); cursor:pointer;
-    border-bottom:2px solid transparent; margin-bottom:-1px; transition:all .15s; }
-  .tab-btn.active { color:var(--accent); border-bottom-color:var(--accent); }
-  .tab-btn:hover:not(.active) { color:var(--text); }
-  .tab-pane { display:none; }
-  .tab-pane.active { display:block; }
+  /* Tabs */
+  .tabs { display: flex; gap: 4px; margin-bottom: 24px; border-bottom: 1px solid var(--border); padding-bottom: 0; }
+  .tab-btn {
+    padding: 10px 20px; background: none; border: none;
+    color: var(--muted); font-family: var(--sans); font-size: 0.88rem; font-weight: 700;
+    cursor: pointer; border-bottom: 2px solid transparent; margin-bottom: -1px;
+    transition: all .15s;
+  }
+  .tab-btn.active { color: var(--accent); border-bottom-color: var(--accent); }
+  .tab-btn:hover:not(.active) { color: var(--text); }
+  .tab-badge {
+    display: inline-flex; align-items: center; justify-content: center;
+    min-width: 18px; height: 18px; border-radius: 9px;
+    background: var(--warn); color: #000;
+    font-size: 0.65rem; font-weight: 800; padding: 0 4px; margin-left: 6px;
+  }
+  .tab-panel { display: none; }
+  .tab-panel.active { display: block; }
 
-  /* ── Version Panel ── */
-  .ver-card { background:var(--surface); border:1px solid var(--border); border-radius:12px;
-    padding:28px 32px; max-width:560px; }
-  .ver-card h2 { font-size:1.1rem; font-weight:800; margin-bottom:6px; }
-  .ver-card h2 span { color:var(--accent); }
-  .ver-card p { font-size:.82rem; color:var(--muted); margin-bottom:24px; line-height:1.6; }
-  .ver-current { background:var(--surface2); border:1px solid var(--border); border-radius:8px;
-    padding:14px 18px; margin-bottom:24px; font-family:var(--mono); font-size:.85rem;
-    display:flex; align-items:center; justify-content:space-between; }
-  .ver-current .label { color:var(--muted); font-size:.7rem; text-transform:uppercase;
-    letter-spacing:.06em; margin-bottom:4px; }
-  .ver-current .val { font-size:1.1rem; font-weight:700; color:var(--accent); }
-  .ver-notes { width:100%; background:var(--surface2); border:1px solid var(--border);
-    border-radius:8px; padding:10px 14px; color:var(--text); font-family:var(--mono);
-    font-size:.85rem; outline:none; resize:vertical; min-height:70px; transition:border-color .2s; }
-  .ver-notes:focus { border-color:var(--accent); }
-
-  /* ── Requests Panel ── */
-  .req-card { background:var(--surface); border:1px solid var(--border); border-radius:12px;
-    padding:24px 28px; }
-  .req-card h2 { font-size:1.1rem; font-weight:800; margin-bottom:6px; }
-  .req-card h2 span { color:var(--warn); }
-  .req-badge { display:inline-flex; align-items:center; gap:5px; padding:3px 10px;
-    border-radius:20px; font-family:var(--mono); font-size:.72rem; font-weight:600; }
-  .req-badge-pending { background:rgba(255,107,53,.12); color:var(--warn); }
-  .req-badge-approved { background:rgba(0,229,160,.12); color:var(--accent); }
-  .req-row { display:flex; align-items:center; gap:12px; padding:14px 16px;
-    border-bottom:1px solid var(--border); flex-wrap:wrap; }
-  .req-row:last-child { border-bottom:none; }
-  .req-name { font-weight:700; font-size:.92rem; }
-  .req-did { font-family:var(--mono); font-size:.78rem; color:var(--muted); }
-  .req-date { font-family:var(--mono); font-size:.72rem; color:var(--muted); margin-left:auto; }
-
+  /* Requests table */
+  .req-status-pending { color: var(--warn); font-family: var(--mono); font-size: .78rem; font-weight: 600; }
+  .req-status-trial { color: var(--accent2); font-family: var(--mono); font-size: .78rem; font-weight: 600; }
+  .req-status-auto { color: var(--muted); font-family: var(--mono); font-size: .78rem; }
 </style>
 </head>
 <body>
@@ -320,13 +300,6 @@
     </div>
   </header>
 
-  <div class="tab-bar">
-    <button class="tab-btn active" id="tbLic"  onclick="switchTab('licenses', this)">🔑 Licenses</button>
-    <button class="tab-btn"        id="tbReq"  onclick="switchTab('requests', this)">📨 Pending Requests <span id="reqBadgeCount" style="display:none;background:var(--warn);color:#000;border-radius:10px;padding:1px 7px;font-size:.7rem;margin-left:4px"></span></button>
-    <button class="tab-btn"        id="tbVer"  onclick="switchTab('version', this)">🚀 Version Release</button>
-  </div>
-
-  <div class="tab-pane active" id="tab-licenses">
   <div class="stats-row">
     <div class="stat-card" style="--accent-color:var(--accent)">
       <div class="stat-label">Total Keys</div>
@@ -350,6 +323,16 @@
     </div>
   </div>
 
+  <!-- Tabs -->
+  <div class="tabs">
+    <button class="tab-btn active" id="tab-licenses" onclick="switchTab('licenses')">🔑 Licenses</button>
+    <button class="tab-btn" id="tab-requests" onclick="switchTab('requests')">📥 Requests <span class="tab-badge" id="reqBadge" style="display:none">0</span></button>
+    <button class="tab-btn" id="tab-version" onclick="switchTab('version')">🚀 Version Release</button>
+  </div>
+
+  <!-- Tab: Licenses -->
+  <div class="tab-panel active" id="panel-licenses">
+
   <!-- Save banner -->
   <div class="save-banner" id="saveBanner">
     <div>⚠ <strong>Unsaved changes</strong> — Download the updated JSON and replace your GitHub file.</div>
@@ -361,7 +344,7 @@
 
   <!-- Toolbar -->
   <div class="toolbar">
-    <input class="search-box" id="searchBox" placeholder="Search by name, key, device ID..." oninput="renderTable()">
+    <input class="search-box" id="searchBox" placeholder="Search by name, key, device ID..." oninput="renderTable()" autocomplete="off" autocorrect="off" spellcheck="false">
     <select class="filter-sel" id="filterStatus" onchange="renderTable()">
       <option value="all">All Status</option>
       <option value="active">Active</option>
@@ -400,65 +383,87 @@
       </tbody>
     </table>
   </div>
-  </div><!-- /tab-licenses -->
+  </div><!-- end #panel-licenses -->
 
-  <!-- TAB: Pending Requests -->
-  <div class="tab-pane" id="tab-requests">
-    <div class="req-card">
-      <h2>📨 Pending <span>Requests</span></h2>
-      <p style="font-size:.82rem;color:var(--muted);margin-bottom:18px;line-height:1.6">
-        Agent রা যখন Auto-Request পাঠায়, এখানে দেখা যাবে।
-        Device ID already filled থাকবে — শুধু expiry দিয়ে Approve করুন।
-      </p>
-      <div style="display:flex;gap:10px;margin-bottom:18px;flex-wrap:wrap">
-        <button class="btn btn-outline btn-sm" onclick="loadRequests()">↻ Reload</button>
-      </div>
-      <div id="reqTableWrap" class="table-wrap">
-        <table><thead><tr>
-          <th>Agent Name</th><th>Device ID</th><th>Requested</th><th>Status</th><th>Action</th>
-        </tr></thead>
-        <tbody id="reqTable">
-          <tr><td colspan="5"><div class="empty-state"><div class="icon">📭</div>Click Reload to fetch requests.</div></td></tr>
-        </tbody></table>
-      </div>
+  <!-- Tab: Requests -->
+  <div class="tab-panel" id="panel-requests">
+    <div class="toolbar" style="margin-bottom:16px">
+      <span style="font-family:var(--mono);font-size:.82rem;color:var(--muted)">requests.json থেকে pending/trial devices</span>
+      <button class="btn btn-outline btn-sm" style="margin-left:auto" onclick="loadRequests()">↻ Reload Requests</button>
     </div>
-  </div><!-- /tab-requests -->
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Agent Name</th>
+            <th>Device ID</th>
+            <th>Status</th>
+            <th>Requested / Registered</th>
+            <th>Trial Start</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody id="requestsTable">
+          <tr><td colspan="7"><div class="empty-state"><div class="icon">📥</div>Click "Reload Requests" to load.</div></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div><!-- end #panel-requests -->
 
-  <!-- TAB: Version Release -->
-  <div class="tab-pane" id="tab-version">
-    <div class="ver-card">
-      <h2>🚀 Version <span>Release</span></h2>
-      <p>নতুন version number ও EXE link দিন। Save করলে <code>version.json</code> GitHub এ update হবে এবং সব agent এর app silent auto-update নেবে।</p>
-      <div class="ver-current">
-        <div>
-          <div class="label">Current Live Version</div>
-          <div class="val" id="verLiveVal">—</div>
+  <!-- Tab: Version Release -->
+  <div class="tab-panel" id="panel-version">
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;align-items:start">
+
+      <!-- Left: Form -->
+      <div style="background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:28px">
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:24px">
+          <div style="width:8px;height:8px;border-radius:50%;background:var(--accent);box-shadow:0 0 8px var(--accent)"></div>
+          <h3 style="font-size:1rem;font-weight:800">Push New <span style="color:var(--accent)">Release</span></h3>
         </div>
-        <button class="btn btn-outline btn-sm" onclick="loadVersionJSON()">↻ Reload</button>
+
+        <div class="form-group">
+          <label>Version Number</label>
+          <input id="v-version" placeholder="2.2.0" autocomplete="off" style="font-size:1.1rem;font-weight:700;letter-spacing:.04em" />
+        </div>
+        <div class="form-group">
+          <label>Download URL (.exe direct link)</label>
+          <input id="v-url" placeholder="https://github.com/.../WA_Recorder.exe" autocomplete="off" style="font-size:.82rem" />
+        </div>
+        <div class="form-group">
+          <label>Release Notes <span style="color:var(--muted);font-weight:400">(optional)</span></label>
+          <input id="v-notes" placeholder="e.g. Bug fixes, improved recording stability" autocomplete="off" />
+        </div>
+
+        <div style="display:flex;gap:10px;margin-top:20px">
+          <button class="btn btn-outline" style="flex:1" onclick="loadVersion()">↻ Load Current</button>
+          <button class="btn btn-primary" style="flex:2" onclick="saveVersion()">🚀 Push Release</button>
+        </div>
       </div>
-      <div class="form-group">
-        <label style="font-family:var(--mono);font-size:.72rem;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;display:block;margin-bottom:7px">New Version Number *</label>
-        <input id="v-version" class="search-box" style="width:100%;margin-bottom:0" placeholder="e.g. 2.1.0" />
+
+      <!-- Right: Preview + Info -->
+      <div style="display:flex;flex-direction:column;gap:16px">
+        <!-- Preview -->
+        <div style="background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:20px">
+          <div style="font-family:var(--mono);font-size:.68rem;color:var(--muted);text-transform:uppercase;letter-spacing:.1em;margin-bottom:12px">📄 version.json preview</div>
+          <pre id="versionPreview" style="font-family:var(--mono);font-size:.85rem;color:var(--accent);line-height:1.8;white-space:pre-wrap;margin:0">{}</pre>
+        </div>
+        <!-- How it works -->
+        <div style="background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:20px">
+          <div style="font-family:var(--mono);font-size:.68rem;color:var(--muted);text-transform:uppercase;letter-spacing:.1em;margin-bottom:12px">ℹ️ কীভাবে কাজ করে</div>
+          <div style="font-size:.82rem;color:var(--muted);line-height:1.9">
+            <div>① Push করলে <code style="color:var(--accent);font-family:var(--mono)">version.json</code> GitHub-এ update হয়</div>
+            <div>② Agent app চালু হলে current version check করে</div>
+            <div>③ নতুন version থাকলে silently download করে</div>
+            <div>④ পরের restart-এ নতুন .exe দিয়ে replace হয়</div>
+          </div>
+        </div>
       </div>
-      <div class="form-group" style="margin-top:14px">
-        <label style="font-family:var(--mono);font-size:.72rem;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;display:block;margin-bottom:7px">EXE Download URL *</label>
-        <input id="v-url" class="search-box" style="width:100%;margin-bottom:0" value="https://github.com/rncall/Dashboard/releases/latest/download/WA_CallRecorder.exe" />
-      </div>
-      <div class="form-group" style="margin-top:14px">
-        <label style="font-family:var(--mono);font-size:.72rem;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;display:block;margin-bottom:7px">Release Notes</label>
-        <textarea id="v-notes" class="ver-notes" placeholder="e.g. Bug fix, new feature..."></textarea>
-      </div>
-      <div style="margin-top:22px;display:flex;gap:10px;flex-wrap:wrap">
-        <button class="btn btn-primary" onclick="releaseVersion()">☁ Publish to GitHub</button>
-        <button class="btn btn-outline" onclick="loadVersionJSON()">↻ Reload Current</button>
-      </div>
-      <div id="verStatus" style="margin-top:14px;font-family:var(--mono);font-size:.82rem;min-height:20px"></div>
+
     </div>
-  </div><!-- /tab-version -->
+  </div><!-- end #panel-version -->
 
-</div>
-
-<!-- Add/Edit Modal -->
+</div><!-- end .wrap -->
 <div class="modal-overlay" id="addModal">
   <div class="modal">
     <h2 id="modalTitle">New <span>License</span></h2>
@@ -519,33 +524,6 @@
   </div>
 </div>
 
-
-<!-- Approve Request Modal -->
-<div class="modal-overlay" id="approveModal">
-  <div class="modal" style="max-width:460px">
-    <h2>✅ Approve <span>Request</span></h2>
-    <div style="background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:14px 16px;margin-bottom:18px">
-      <div style="font-family:var(--mono);font-size:.7rem;color:var(--muted);text-transform:uppercase;margin-bottom:4px">Agent</div>
-      <div style="font-weight:700;font-size:1rem" id="ap-name"></div>
-      <div style="font-family:var(--mono);font-size:.75rem;color:var(--muted);margin-top:4px" id="ap-device"></div>
-      <input type="hidden" id="ap-device-hidden" />
-    </div>
-    <div class="form-group">
-      <label>Expiry Date *</label>
-      <input type="date" id="ap-expiry" />
-    </div>
-    <div class="form-group">
-      <label>Notes (optional)</label>
-      <input id="ap-note" placeholder="e.g. Customer Support Team" />
-    </div>
-    <div id="apStatus" style="font-family:var(--mono);font-size:.82rem;min-height:18px;margin-bottom:8px"></div>
-    <div class="modal-footer">
-      <button class="btn btn-outline" onclick="closeApproveModal()">Cancel</button>
-      <button class="btn btn-primary" onclick="doApprove()">✅ Approve & Generate Key</button>
-    </div>
-  </div>
-</div>
-
 <div id="toast">✓ <span id="toastMsg">Copied!</span></div>
 
 
@@ -596,6 +574,8 @@ function showTokenModal(onSuccess) {
 async function loadFromURL() {
   try {
     showToast('Fetching licenses.json…');
+    // search box clear করো — browser autocomplete জামেলা ঠেকাতে
+    document.getElementById('searchBox').value = '';
     const r = await fetch(LICENSE_URL + '?t=' + Date.now());
     if (!r.ok) throw new Error('HTTP ' + r.status);
     licenses = await r.json();
@@ -900,198 +880,216 @@ document.getElementById('addModal').addEventListener('click', e => {
   if (e.target === document.getElementById('addModal')) closeModal();
 });
 
-// ── Tab Switching ─────────────────────────────────────────────
-function switchTab(name, btnEl) {
-  document.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('active'));
-  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-  document.getElementById('tab-' + name).classList.add('active');
-  if (btnEl) btnEl.classList.add('active');
-  if (name === 'version')  loadVersionJSON();
+// ── Tab Switching ──────────────────────────────────────────────
+function switchTab(name) {
+  ['licenses','requests','version'].forEach(t => {
+    document.getElementById('tab-'+t).classList.toggle('active', t===name);
+    document.getElementById('panel-'+t).classList.toggle('active', t===name);
+  });
   if (name === 'requests') loadRequests();
+  if (name === 'version')  loadVersion();
 }
 
-// ── Pending Requests ──────────────────────────────────────────
-const REQUESTS_URL  = 'https://rncall.github.io/requests.json';
-const REQUESTS_FILE = 'requests.json';
+// ── Requests (requests.json) ───────────────────────────────────
+const REQUESTS_URL = 'https://rncall.github.io/requests.json';
+let requestsData   = [];
 
 async function loadRequests() {
-  document.getElementById('reqTable').innerHTML =
-    '<tr><td colspan="5" style="text-align:center;padding:20px;color:var(--muted)">Loading...</td></tr>';
+  const tbody = document.getElementById('requestsTable');
+  tbody.innerHTML = `<tr><td colspan="7"><div class="empty-state"><div class="icon">⏳</div>Loading…</div></td></tr>`;
   try {
     const r = await fetch(REQUESTS_URL + '?t=' + Date.now());
     if (!r.ok) throw new Error('HTTP ' + r.status);
-    const reqs = await r.json();
-    const pending = reqs.filter(r => r.status === 'pending');
-    // update badge
-    const badge = document.getElementById('reqBadgeCount');
-    if (pending.length > 0) { badge.textContent = pending.length; badge.style.display = 'inline'; }
+    requestsData = await r.json();
+    renderRequests();
+    // pending count badge
+    const pending = requestsData.filter(e => e.status === 'pending' || e.trial_start).length;
+    const badge = document.getElementById('reqBadge');
+    if (pending > 0) { badge.textContent = pending; badge.style.display = ''; }
     else badge.style.display = 'none';
-    if (!reqs.length) {
-      document.getElementById('reqTable').innerHTML =
-        '<tr><td colspan="5"><div class="empty-state"><div class="icon">📭</div>No requests yet.</div></td></tr>';
-      return;
-    }
-    document.getElementById('reqTable').innerHTML = reqs.map((req, i) => {
-      const isPending = req.status === 'pending';
-      const badge = isPending
-        ? '<span class="req-badge req-badge-pending">Pending</span>'
-        : '<span class="req-badge req-badge-approved">Approved</span>';
-      const action = isPending
-        ? `<button class="btn btn-primary btn-sm" onclick="openApproveModal(${i})">✅ Approve</button>`
-        : `<span style="color:var(--muted);font-size:.8rem">Done</span>`;
-      return `<tr>
-        <td><div class="req-name">${escHtml(req.agent_name||'')}</div></td>
-        <td><span class="req-did">${escHtml(req.device_id||'')}</span></td>
-        <td><span style="font-family:var(--mono);font-size:.78rem;color:var(--muted)">${escHtml(req.requested||'')}</span></td>
-        <td>${badge}</td>
-        <td>${action}</td>
-      </tr>`;
-    }).join('');
-    window._reqData = reqs;
+    showToast('✅ Loaded ' + requestsData.length + ' requests');
   } catch(e) {
-    document.getElementById('reqTable').innerHTML =
-      `<tr><td colspan="5"><div class="empty-state"><div class="icon">⚠</div>${e.message}</div></td></tr>`;
+    tbody.innerHTML = `<tr><td colspan="7"><div class="empty-state"><div class="icon">❌</div>${e.message}</div></td></tr>`;
+    showToast('❌ ' + e.message);
   }
 }
 
-// ── Approve Modal ─────────────────────────────────────────────
-let _approveIdx = null;
+function renderRequests() {
+  const tbody = document.getElementById('requestsTable');
+  if (!requestsData.length) {
+    tbody.innerHTML = `<tr><td colspan="7"><div class="empty-state"><div class="icon">📭</div>No requests found.</div></td></tr>`;
+    return;
+  }
+  // _origIdx track করতে হবে — sort করলে index বদলে যায়
+  const sorted = requestsData
+    .map((e, i) => ({...e, _origIdx: i}))
+    .sort((a,b) => {
+      const ap = a.status==='pending'||a.trial_start ? 0 : 1;
+      const bp = b.status==='pending'||b.trial_start ? 0 : 1;
+      if (ap !== bp) return ap - bp;
+      return (b.requested||b.registered||'') > (a.requested||a.registered||'') ? 1 : -1;
+    });
+  tbody.innerHTML = sorted.map((e, rowNum) => {
+    const origIdx = e._origIdx; // ← এটাই requestsData-তে আসল position
+    const alreadyLicensed = licenses.some(l => String(l.device_id) === String(e.device_id) && l.active);
+    const isRejected = e.status === 'rejected';
+    const statusHtml = isRejected
+      ? `<span style="color:var(--danger);font-family:var(--mono);font-size:.78rem;font-weight:600">✕ Rejected</span>`
+      : e.status === 'pending'
+      ? `<span class="req-status-pending">⏳ Pending</span>`
+      : e.status === 'auto_registered'
+      ? `<span class="req-status-auto">🤖 Auto-reg</span>`
+      : `<span class="req-status-trial">🔵 ${escHtml(e.status)}</span>`;
+    const trialHtml = e.trial_start
+      ? `<span style="font-family:var(--mono);font-size:.78rem;color:var(--accent2)">${escHtml(e.trial_start)}</span>`
+      : `<span style="color:var(--muted);font-size:.78rem">—</span>`;
 
-function openApproveModal(idx) {
-  _approveIdx = idx;
-  const req = window._reqData[idx];
-  document.getElementById('ap-name').textContent   = req.agent_name || '';
-  document.getElementById('ap-device').textContent = req.device_id  || '';
-  document.getElementById('ap-device-hidden').value = req.device_id || '';
-  // Default expiry = 1 year
-  const d = new Date(); d.setFullYear(d.getFullYear() + 1);
-  document.getElementById('ap-expiry').value = d.toISOString().slice(0, 10);
-  document.getElementById('ap-note').value   = '';
-  document.getElementById('apStatus').textContent = '';
-  document.getElementById('approveModal').classList.add('open');
+    let actionHtml;
+    if (alreadyLicensed) {
+      actionHtml = `
+        <div class="action-group">
+          <span style="color:var(--accent);font-family:var(--mono);font-size:.78rem">✅ Licensed</span>
+          <button class="btn btn-sm" style="background:none;border:none;cursor:pointer;color:var(--danger);font-size:.82rem" onclick="deleteRequest(${origIdx})" title="Delete">✕</button>
+        </div>`;
+    } else if (isRejected) {
+      actionHtml = `
+        <div class="action-group">
+          <button class="btn btn-outline btn-sm" onclick="approveRequest('${escHtml(e.agent_name||'')}','${escHtml(e.device_id||'')}')">✓ Approve</button>
+          <button class="btn btn-sm" style="background:none;border:none;cursor:pointer;color:var(--danger);font-size:.82rem" onclick="deleteRequest(${origIdx})" title="Delete">✕</button>
+        </div>`;
+    } else {
+      actionHtml = `
+        <div class="action-group">
+          <button class="btn btn-primary btn-sm" onclick="approveRequest('${escHtml(e.agent_name||'')}','${escHtml(e.device_id||'')}')">✓ Approve</button>
+          <button class="btn btn-sm" style="background:none;border:1px solid var(--danger);color:var(--danger);cursor:pointer;border-radius:6px;padding:5px 10px;font-size:.78rem;font-weight:700" onclick="rejectRequest(${origIdx})">✕ Reject</button>
+          <button class="btn btn-sm" style="background:none;border:none;cursor:pointer;color:var(--muted);font-size:.82rem" onclick="deleteRequest(${origIdx})" title="Delete entry">🗑</button>
+        </div>`;
+    }
+
+    return `<tr>
+      <td style="color:var(--muted);font-family:var(--mono);font-size:.8rem">${rowNum+1}</td>
+      <td style="font-weight:700">${escHtml(e.agent_name||'Unknown')}</td>
+      <td><span class="device-id">${escHtml(e.device_id||'—')}</span></td>
+      <td>${statusHtml}</td>
+      <td style="font-family:var(--mono);font-size:.78rem;color:var(--muted)">${escHtml(e.requested||e.registered||'—')}</td>
+      <td>${trialHtml}</td>
+      <td>${actionHtml}</td>
+    </tr>`;
+  }).join('');
 }
 
-function closeApproveModal() {
-  document.getElementById('approveModal').classList.remove('open');
+async function rejectRequest(idx) {
+  const e = requestsData[idx];
+  if (!confirm(`"${e.agent_name||'Unknown'}" কে reject করবেন?`)) return;
+  requestsData[idx].status = 'rejected';
+  // Save back to GitHub
+  await saveRequestsToGitHub();
+  renderRequests();
+  showToast('✅ Rejected');
 }
 
-async function doApprove() {
+async function deleteRequest(idx) {
+  const e = requestsData[idx];
+  if (!confirm(`"${e.agent_name||'Unknown'}" এর entry delete করবেন?`)) return;
+  requestsData.splice(idx, 1);
+  await saveRequestsToGitHub();
+  renderRequests();
+  showToast('✅ Entry deleted');
+}
+
+async function saveRequestsToGitHub() {
   const token = getToken();
-  if (!token) { showTokenModal(() => doApprove()); return; }
-  const req    = window._reqData[_approveIdx];
-  const expiry = document.getElementById('ap-expiry').value;
-  const note   = document.getElementById('ap-note').value.trim();
-  if (!expiry) { document.getElementById('apStatus').textContent = 'Expiry date required.'; return; }
-
-  document.getElementById('apStatus').textContent = '⏳ Creating license...';
-
-  // 1. Generate license key and add to licenses.json
-  const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
-  const seg = n => Array.from({length:n}, ()=>chars[Math.floor(Math.random()*chars.length)]).join('');
-  const newKey = `RNC-${seg(4)}-${seg(4)}-${seg(4)}`;
-
-  const headers = { 'Authorization': `token ${token}`, 'Content-Type': 'application/json' };
-
-  // Load licenses
-  const licRes = await fetch(`https://api.github.com/repos/${GITHUB_REPO}/contents/${GITHUB_FILE}`, {headers});
-  if (licRes.status === 401) { sessionStorage.removeItem('gh_token'); showTokenModal(() => doApprove()); return; }
-  const licData = await licRes.json();
-  const licSha  = licData.sha;
-  const licList = JSON.parse(atob(licData.content));
-
-  licList.push({
-    key: newKey, user: req.agent_name, device_id: req.device_id,
-    expiry, active: true, note: note || 'Auto-approved',
-    created: new Date().toISOString().slice(0,10),
-  });
-
-  const licContent = btoa(unescape(encodeURIComponent(JSON.stringify(licList, null, 2))));
-  const licPut = await fetch(`https://api.github.com/repos/${GITHUB_REPO}/contents/${GITHUB_FILE}`, {
-    method:'PUT', headers,
-    body: JSON.stringify({ message: `Approve: ${req.agent_name} (${req.device_id})`, content: licContent, sha: licSha })
-  });
-  if (!licPut.ok) { document.getElementById('apStatus').textContent = '❌ Failed to save license.'; return; }
-
-  // 2. Mark request as approved in requests.json
-  const reqRes = await fetch(`https://api.github.com/repos/${GITHUB_REPO}/contents/${REQUESTS_FILE}`, {headers});
-  const reqData = await reqRes.json();
-  const reqSha  = reqData.sha;
-  const reqList = JSON.parse(atob(reqData.content));
-  const ri = reqList.findIndex(r => r.device_id === req.device_id);
-  if (ri !== -1) { reqList[ri].status = 'approved'; reqList[ri].approved = new Date().toISOString().slice(0,10); }
-  const reqContent = btoa(unescape(encodeURIComponent(JSON.stringify(reqList, null, 2))));
-  await fetch(`https://api.github.com/repos/${GITHUB_REPO}/contents/${REQUESTS_FILE}`, {
-    method:'PUT', headers,
-    body: JSON.stringify({ message: `Approved: ${req.agent_name}`, content: reqContent, sha: reqSha })
-  });
-
-  document.getElementById('apStatus').textContent = `✅ Approved! Key: ${newKey}`;
-  showToast(`✅ Approved: ${req.agent_name} — Key: ${newKey}`);
-  // Reload data
-  licenses = licList; renderTable(); updateStats();
-  setTimeout(() => { closeApproveModal(); loadRequests(); }, 2000);
+  if (!token) { showTokenModal(async () => await saveRequestsToGitHub()); return; }
+  try {
+    const REQ_API = `https://api.github.com/repos/${GITHUB_REPO}/contents/requests.json`;
+    const headers = { 'Authorization': `token ${token}`, 'Content-Type': 'application/json' };
+    const shaRes = await fetch(REQ_API, { headers });
+    if (shaRes.status === 401) { showToast('❌ Token expired'); showTokenModal(async()=>await saveRequestsToGitHub()); return; }
+    const sha = shaRes.ok ? (await shaRes.json()).sha : null;
+    const content = btoa(unescape(encodeURIComponent(JSON.stringify(requestsData, null, 2))));
+    const body = { message: 'Admin update requests.json', content };
+    if (sha) body.sha = sha;
+    const res = await fetch(REQ_API, { method: 'PUT', headers, body: JSON.stringify(body) });
+    if (!res.ok) { const e = await res.json(); showToast('❌ ' + (e.message||'Save failed')); }
+  } catch(e) { showToast('❌ ' + e.message); }
 }
-
-document.getElementById('approveModal').addEventListener('click', e => {
-  if (e.target === document.getElementById('approveModal')) closeApproveModal();
-});
 
 // ── Version Release ───────────────────────────────────────────
-const VERSION_URL  = 'https://rncall.github.io/version.json';
 const VERSION_FILE = 'version.json';
+let versionData = {};
 
-async function loadVersionJSON() {
+function updateVersionPreview() {
+  const v = document.getElementById('v-version').value.trim();
+  const u = document.getElementById('v-url').value.trim();
+  const n = document.getElementById('v-notes').value.trim();
+  versionData = { version: v, download_url: u };
+  if (n) versionData.notes = n;
+  document.getElementById('versionPreview').textContent = JSON.stringify(versionData, null, 2);
+}
+
+// Live preview on input
+['v-version','v-url','v-notes'].forEach(id => {
+  document.getElementById(id)?.addEventListener('input', updateVersionPreview);
+});
+
+async function loadVersion() {
   try {
-    const r = await fetch(VERSION_URL + '?t=' + Date.now());
+    showToast('Fetching version.json…');
+    const r = await fetch(`https://rncall.github.io/version.json?t=${Date.now()}`);
     if (!r.ok) throw new Error('HTTP ' + r.status);
     const data = await r.json();
-    document.getElementById('verLiveVal').textContent = data.version || '—';
-    if (!document.getElementById('v-version').value)
-      document.getElementById('v-version').value = data.version || '';
-    if (!document.getElementById('v-url').value || document.getElementById('v-url').value === '')
-      document.getElementById('v-url').value = data.download_url || '';
-    document.getElementById('v-notes').value = data.release_notes || '';
-    setVerStatus('✅ Loaded: v' + data.version, 'var(--accent)');
+    document.getElementById('v-version').value = data.version || '';
+    document.getElementById('v-url').value     = data.download_url || '';
+    document.getElementById('v-notes').value   = data.notes || '';
+    versionData = data;
+    document.getElementById('versionPreview').textContent = JSON.stringify(data, null, 2);
+    showToast('✅ version.json loaded');
   } catch(e) {
-    setVerStatus('❌ Could not load version.json: ' + e.message, 'var(--danger)');
+    showToast('❌ ' + e.message);
   }
 }
 
-function setVerStatus(msg, color) {
-  const el = document.getElementById('verStatus');
-  el.textContent = msg; el.style.color = color || 'var(--muted)';
+async function saveVersion() {
+  const token = getToken();
+  if (!token) { showTokenModal(() => saveVersion()); return; }
+  updateVersionPreview();
+  if (!versionData.version) { showToast('❌ Version number required'); return; }
+  if (!versionData.download_url) { showToast('❌ Download URL required'); return; }
+  try {
+    showToast('Pushing version.json…');
+    const VER_API = `https://api.github.com/repos/${GITHUB_REPO}/contents/${VERSION_FILE}`;
+    const headers = { 'Authorization': `token ${token}`, 'Content-Type': 'application/json' };
+    const shaRes = await fetch(VER_API, { headers });
+    if (shaRes.status === 401) { showToast('❌ Token expired'); showTokenModal(()=>saveVersion()); return; }
+    const sha = shaRes.ok ? (await shaRes.json()).sha : null;
+    const content = btoa(unescape(encodeURIComponent(JSON.stringify(versionData, null, 2))));
+    const body = { message: `Release v${versionData.version}`, content };
+    if (sha) body.sha = sha;
+    const res = await fetch(VER_API, { method: 'PUT', headers, body: JSON.stringify(body) });
+    if (res.ok) {
+      showToast(`✅ v${versionData.version} released!`);
+    } else {
+      const e = await res.json(); showToast('❌ ' + (e.message||'Failed'));
+    }
+  } catch(e) { showToast('❌ ' + e.message); }
 }
 
-async function releaseVersion() {
-  const ver   = document.getElementById('v-version').value.trim();
-  const url   = document.getElementById('v-url').value.trim();
-  const notes = document.getElementById('v-notes').value.trim();
-  if (!ver)  { setVerStatus('❌ Version number required.', 'var(--danger)'); return; }
-  if (!url)  { setVerStatus('❌ Download URL required.', 'var(--danger)'); return; }
-  if (!/^\d+\.\d+\.\d+$/.test(ver)) { setVerStatus('❌ Format: 2.1.0', 'var(--danger)'); return; }
-  const token = getToken();
-  if (!token) { showTokenModal(() => releaseVersion()); return; }
-  setVerStatus('⏳ Publishing…', 'var(--muted)');
-  const payload = { version: ver, download_url: url, release_notes: notes };
-  const content = btoa(unescape(encodeURIComponent(JSON.stringify(payload, null, 2))));
-  try {
-    const headers = { 'Authorization': `token ${token}`, 'Content-Type': 'application/json' };
-    const shaRes = await fetch(`https://api.github.com/repos/${GITHUB_REPO}/contents/${VERSION_FILE}`, {headers});
-    if (shaRes.status === 401) { sessionStorage.removeItem('gh_token'); showTokenModal(() => releaseVersion()); return; }
-    const sha = (await shaRes.json()).sha;
-    const res = await fetch(`https://api.github.com/repos/${GITHUB_REPO}/contents/${VERSION_FILE}`, {
-      method:'PUT', headers,
-      body: JSON.stringify({ message: `Release v${ver} · ${new Date().toLocaleString()}`, content, sha })
-    });
-    if (res.ok) {
-      document.getElementById('verLiveVal').textContent = ver;
-      setVerStatus(`✅ v${ver} published! সব agent পরের বার চালু করলে silent update নেবে।`, 'var(--accent)');
-      showToast(`✅ Released v${ver}`);
-    } else {
-      const err = await res.json();
-      setVerStatus('❌ ' + (err.message || 'Push failed'), 'var(--danger)');
-    }
-  } catch(e) { setVerStatus('❌ ' + e.message, 'var(--danger)'); }
+function approveRequest(agent_name, device_id) {
+  if (!device_id) { showToast('❌ No device ID'); return; }
+  // Pre-fill modal and open
+  editIndex = null;
+  document.getElementById('modalTitle').innerHTML = 'Approve <span>Request</span>';
+  document.getElementById('f-user').value   = agent_name;
+  document.getElementById('f-device').value = device_id;
+  document.getElementById('f-note').value   = 'Approved from Requests';
+  document.getElementById('keyDisplay').style.display = 'none';
+  document.getElementById('modalSaveBtn').textContent = 'Generate & Save';
+  document.getElementById('modalSaveBtn').onclick = saveEntry;
+  const d = new Date(); d.setFullYear(d.getFullYear()+1);
+  document.getElementById('f-expiry').value = d.toISOString().slice(0,10);
+  document.getElementById('addModal').classList.add('open');
+  // Switch to licenses tab so save works
+  switchTab('licenses');
 }
 
 // ── Init ──────────────────────────────────────────────────────
