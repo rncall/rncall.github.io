@@ -388,7 +388,7 @@
   <!-- Tab: Requests -->
   <div class="tab-panel" id="panel-requests">
     <div class="toolbar" style="margin-bottom:16px">
-      <span style="font-family:var(--mono);font-size:.82rem;color:var(--muted)">requests.json থেকে pending/trial devices</span>
+      <span style="font-family:var(--mono);font-size:.82rem;color:var(--muted)">Pending & trial devices from requests.json</span>
       <button class="btn btn-outline btn-sm" style="margin-left:auto" onclick="loadRequests()">↻ Reload Requests</button>
     </div>
     <div class="table-wrap">
@@ -450,12 +450,12 @@
         </div>
         <!-- How it works -->
         <div style="background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:20px">
-          <div style="font-family:var(--mono);font-size:.68rem;color:var(--muted);text-transform:uppercase;letter-spacing:.1em;margin-bottom:12px">ℹ️ কীভাবে কাজ করে</div>
+          <div style="font-family:var(--mono);font-size:.68rem;color:var(--muted);text-transform:uppercase;letter-spacing:.1em;margin-bottom:12px">ℹ️ How it works</div>
           <div style="font-size:.82rem;color:var(--muted);line-height:1.9">
-            <div>① Push করলে <code style="color:var(--accent);font-family:var(--mono)">version.json</code> GitHub-এ update হয়</div>
-            <div>② Agent app চালু হলে current version check করে</div>
-            <div>③ নতুন version থাকলে silently download করে</div>
-            <div>④ পরের restart-এ নতুন .exe দিয়ে replace হয়</div>
+            <div>① Push updates <code style="color:var(--accent);font-family:var(--mono)">version.json</code> on GitHub Pages</div>
+            <div>② Agent app checks current version on startup</div>
+            <div>③ If newer version found, downloads silently</div>
+            <div>④ Replaces .exe on next restart automatically</div>
           </div>
         </div>
       </div>
@@ -506,15 +506,15 @@
   <div class="modal" style="max-width:420px">
     <h2>GitHub <span>Token</span></h2>
     <p style="font-size:.85rem;color:var(--muted);margin-bottom:20px;line-height:1.6">
-      Token শুধু এই browser session এ থাকবে — page বন্ধ করলে মুছে যাবে।
-      Code বা GitHub এ কোথাও save হয় না।
+      Token is stored only for this browser session — cleared when you close the page.
+      It is never saved to code or GitHub.
     </p>
     <div class="form-group">
       <label>Personal Access Token (repo scope)</label>
       <input id="tokenInput" type="password" placeholder="ghp_xxxxxxxxxxxx" />
     </div>
     <p style="font-size:.75rem;color:var(--muted);margin-bottom:4px">
-      Token পেতে: GitHub → Settings → Developer Settings → Personal Access Tokens → Tokens (classic) → <strong>repo</strong> scope
+      To generate: GitHub → Settings → Developer Settings → Personal Access Tokens → Tokens (classic) → <strong>repo</strong> scope
     </p>
     <div id="tokenError" style="color:var(--danger);font-size:.82rem;margin:8px 0;min-height:18px"></div>
     <div class="modal-footer">
@@ -528,12 +528,12 @@
 
 
 <script>
-// ── Config (কোনো secret নেই এখানে) ───────────────────────────
+// ── Config ────────────────────────────────────────────────────
 const LICENSE_URL  = 'https://rncall.github.io/licenses.json';
 const GITHUB_REPO  = 'rncall/rncall.github.io';
 const GITHUB_FILE  = 'licenses.json';
 
-// Token browser session এ থাকে — code এ না
+// Token lives in browser session only — never in code
 function getToken() {
   return sessionStorage.getItem('gh_token') || '';
 }
@@ -574,7 +574,7 @@ function showTokenModal(onSuccess) {
 async function loadFromURL() {
   try {
     showToast('Fetching licenses.json…');
-    // search box clear করো — browser autocomplete জামেলা ঠেকাতে
+    // Clear search box to prevent browser autocomplete pollution
     document.getElementById('searchBox').value = '';
     const r = await fetch(LICENSE_URL + '?t=' + Date.now());
     if (!r.ok) throw new Error('HTTP ' + r.status);
@@ -920,7 +920,7 @@ function renderRequests() {
     tbody.innerHTML = `<tr><td colspan="7"><div class="empty-state"><div class="icon">📭</div>No requests found.</div></td></tr>`;
     return;
   }
-  // _origIdx track করতে হবে — sort করলে index বদলে যায়
+  // Tag each entry with its original index before sorting
   const sorted = requestsData
     .map((e, i) => ({...e, _origIdx: i}))
     .sort((a,b) => {
@@ -930,7 +930,7 @@ function renderRequests() {
       return (b.requested||b.registered||'') > (a.requested||a.registered||'') ? 1 : -1;
     });
   tbody.innerHTML = sorted.map((e, rowNum) => {
-    const origIdx = e._origIdx; // ← এটাই requestsData-তে আসল position
+    const origIdx = e._origIdx; // real position in requestsData array
     const alreadyLicensed = licenses.some(l => String(l.device_id) === String(e.device_id) && l.active);
     const isRejected = e.status === 'rejected';
     const statusHtml = isRejected
@@ -980,38 +980,52 @@ function renderRequests() {
 
 async function rejectRequest(idx) {
   const e = requestsData[idx];
-  if (!confirm(`"${e.agent_name||'Unknown'}" কে reject করবেন?`)) return;
+  if (!confirm(`Reject request from "${e.agent_name||'Unknown'}"?`)) return;
   requestsData[idx].status = 'rejected';
-  // Save back to GitHub
-  await saveRequestsToGitHub();
   renderRequests();
-  showToast('✅ Rejected');
+  showToast('Saving to GitHub…');
+  await saveRequestsToGitHub();
 }
 
 async function deleteRequest(idx) {
   const e = requestsData[idx];
-  if (!confirm(`"${e.agent_name||'Unknown'}" এর entry delete করবেন?`)) return;
+  if (!confirm(`Delete entry for "${e.agent_name||'Unknown'}"? This cannot be undone.`)) return;
   requestsData.splice(idx, 1);
-  await saveRequestsToGitHub();
   renderRequests();
-  showToast('✅ Entry deleted');
+  showToast('Saving to GitHub…');
+  await saveRequestsToGitHub();
 }
 
 async function saveRequestsToGitHub() {
   const token = getToken();
-  if (!token) { showTokenModal(async () => await saveRequestsToGitHub()); return; }
+  if (!token) {
+    showTokenModal(async () => await saveRequestsToGitHub());
+    return;
+  }
   try {
     const REQ_API = `https://api.github.com/repos/${GITHUB_REPO}/contents/requests.json`;
     const headers = { 'Authorization': `token ${token}`, 'Content-Type': 'application/json' };
     const shaRes = await fetch(REQ_API, { headers });
-    if (shaRes.status === 401) { showToast('❌ Token expired'); showTokenModal(async()=>await saveRequestsToGitHub()); return; }
+    if (shaRes.status === 401) {
+      sessionStorage.removeItem('gh_token');
+      showToast('❌ Token expired — please re-enter.');
+      showTokenModal(async () => await saveRequestsToGitHub());
+      return;
+    }
     const sha = shaRes.ok ? (await shaRes.json()).sha : null;
     const content = btoa(unescape(encodeURIComponent(JSON.stringify(requestsData, null, 2))));
-    const body = { message: 'Admin update requests.json', content };
+    const body = { message: 'Admin: update requests.json', content };
     if (sha) body.sha = sha;
     const res = await fetch(REQ_API, { method: 'PUT', headers, body: JSON.stringify(body) });
-    if (!res.ok) { const e = await res.json(); showToast('❌ ' + (e.message||'Save failed')); }
-  } catch(e) { showToast('❌ ' + e.message); }
+    if (res.ok) {
+      showToast('✅ Saved to GitHub');
+    } else {
+      const err = await res.json();
+      showToast('❌ ' + (err.message || 'Save failed'));
+    }
+  } catch(e) {
+    showToast('❌ ' + e.message);
+  }
 }
 
 // ── Version Release ───────────────────────────────────────────
