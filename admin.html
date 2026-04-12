@@ -344,7 +344,7 @@
 
   <!-- Toolbar -->
   <div class="toolbar">
-    <input class="search-box" id="searchBox" placeholder="Search by name, key, device ID..." oninput="renderTable()" autocomplete="off" autocorrect="off" spellcheck="false">
+    <input class="search-box" id="searchBox" placeholder="Search by name, key, device ID..." oninput="renderTable()" autocomplete="new-password" name="search_rnc_x7k" autocorrect="off" spellcheck="false">
     <select class="filter-sel" id="filterStatus" onchange="renderTable()">
       <option value="all">All Status</option>
       <option value="active">Active</option>
@@ -424,15 +424,15 @@
 
         <div class="form-group">
           <label>Version Number</label>
-          <input id="v-version" placeholder="2.2.0" autocomplete="off" style="font-size:1.1rem;font-weight:700;letter-spacing:.04em" />
+          <input id="v-version" placeholder="2.2.0" autocomplete="new-password" name="ver_num_x9q" style="font-size:1.1rem;font-weight:700;letter-spacing:.04em" />
         </div>
         <div class="form-group">
           <label>Download URL (.exe direct link)</label>
-          <input id="v-url" placeholder="https://github.com/.../WA_Recorder.exe" autocomplete="off" style="font-size:.82rem" />
+          <input id="v-url" placeholder="https://github.com/.../WA_Recorder.exe" autocomplete="new-password" name="ver_url_x9q" style="font-size:.82rem" />
         </div>
         <div class="form-group">
           <label>Release Notes <span style="color:var(--muted);font-weight:400">(optional)</span></label>
-          <input id="v-notes" placeholder="e.g. Bug fixes, improved recording stability" autocomplete="off" />
+          <input id="v-notes" placeholder="e.g. Bug fixes, improved recording stability" autocomplete="new-password" name="ver_notes_x9q" />
         </div>
 
         <div style="display:flex;gap:10px;margin-top:20px">
@@ -470,11 +470,11 @@
 
     <div class="form-group">
       <label>User / Agent Name *</label>
-      <input id="f-user" placeholder="e.g. Rahim, Agent_05" />
+      <input id="f-user" placeholder="e.g. Rahim, Agent_05" autocomplete="new-password" name="lic_user_x9q" />
     </div>
     <div class="form-group">
       <label>Device ID (optional — leave blank to allow any device)</label>
-      <input id="f-device" placeholder="e.g. 575F940288325C2A" />
+      <input id="f-device" placeholder="e.g. 575F940288325C2A" autocomplete="new-password" name="lic_dev_x9q" />
     </div>
     <div class="form-group">
       <label>Expiry Date *</label>
@@ -482,7 +482,7 @@
     </div>
     <div class="form-group">
       <label>Notes</label>
-      <input id="f-note" placeholder="e.g. Customer Support Team" />
+      <input id="f-note" placeholder="e.g. Customer Support Team" autocomplete="new-password" name="lic_note_x9q" />
     </div>
 
     <div id="keyDisplay" style="display:none">
