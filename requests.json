@@ -27,7 +27,10 @@
     "device_id": "F92350EE6E731B03",
     "status": "pending",
     "requested": "2026-04-12 06:54",
-    "trial_start": "2026-04-12 06:54"
+    "trial_start": "2026-04-12 06:54",
+    "last_seen": "2026-04-13 03:22",
+    "version": "2.1.0",
+    "first_seen": "2026-04-13 03:22"
   },
   {
     "agent_name": "Shuvra",
