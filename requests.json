@@ -48,7 +48,10 @@
     "device_id": "AAA10F012E4CABB4",
     "status": "pending",
     "requested": "2026-04-12 07:15",
-    "trial_start": "2026-04-12 07:15"
+    "trial_start": "2026-04-12 07:15",
+    "last_seen": "2026-04-13 03:02",
+    "version": "2.1.0",
+    "first_seen": "2026-04-13 03:02"
   },
   {
     "agent_name": "Mehedee",
