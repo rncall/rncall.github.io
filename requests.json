@@ -68,7 +68,10 @@
     "device_id": "C0DAF18E1015CA43",
     "status": "pending",
     "requested": "2026-04-12 09:10",
-    "trial_start": "2026-04-12 09:10"
+    "trial_start": "2026-04-12 09:10",
+    "last_seen": "2026-04-13 03:13",
+    "version": "2.1.0",
+    "first_seen": "2026-04-13 03:13"
   },
   {
     "agent_name": "Tanisha",
