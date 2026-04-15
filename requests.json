@@ -13,7 +13,10 @@
     "device_id": "B2CC19355ADD5516",
     "status": "pending",
     "requested": "2026-04-12 06:44",
-    "trial_start": "2026-04-12 06:44"
+    "trial_start": "2026-04-12 06:44",
+    "last_seen": "2026-04-15 07:52",
+    "version": "2.2.0",
+    "first_seen": "2026-04-15 07:52"
   },
   {
     "agent_name": "Ayon",
