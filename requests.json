@@ -40,7 +40,10 @@
     "device_id": "A4EEED88D1B0C508",
     "status": "pending",
     "requested": "2026-04-12 07:06",
-    "trial_start": "2026-04-12 07:06"
+    "trial_start": "2026-04-12 07:06",
+    "last_seen": "2026-04-15 03:28",
+    "version": "2.1.0",
+    "first_seen": "2026-04-15 03:28"
   },
   {
     "agent_name": "Yamin",
