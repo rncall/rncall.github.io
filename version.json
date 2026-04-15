@@ -1,5 +1,5 @@
 {
-  "version": "2.2.0",
+  "version": "2.3.0",
   "download_url": "https://github.com/rncall/Dashboard/releases/latest/download/WA_CallRecorder.exe",
-  "notes": "Caller Info Detection, Incoming and outgoing Detection."
+  "notes": "Real Time Status"
 }
