@@ -97,5 +97,12 @@
     "last_seen": "2026-04-16 03:16",
     "version": "2.2.0",
     "first_seen": "2026-04-15 03:06"
+  },
+  {
+    "agent_name": "Miraz",
+    "device_id": "EFD9CFDD4A4B382E",
+    "status": "pending",
+    "requested": "2026-04-16 10:40",
+    "trial_start": "2026-04-16 10:40"
   }
 ]
