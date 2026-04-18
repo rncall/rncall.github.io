@@ -115,5 +115,14 @@
     "user": "Mahi",
     "note": "Approved from Requests",
     "created": "2026-04-18"
+  },
+  {
+    "key": "RNC-Z6ZQ-SZPB-38GE",
+    "expiry": "2027-04-18",
+    "device_id": "47AB8F9FEE546A2D",
+    "active": true,
+    "user": "Momo",
+    "note": "Approved from Requests",
+    "created": "2026-04-18"
   }
 ]
