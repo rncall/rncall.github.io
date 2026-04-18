@@ -88,5 +88,32 @@
     "user": "Mehedee",
     "note": "Approved from Requests",
     "created": "2026-04-15"
+  },
+  {
+    "key": "RNC-57HW-6MKR-95GQ",
+    "expiry": "2027-04-18",
+    "device_id": "EFD9CFDD4A4B382E",
+    "active": true,
+    "user": "Miraz",
+    "note": "Approved from Requests",
+    "created": "2026-04-18"
+  },
+  {
+    "key": "RNC-Y8L8-GDWZ-R9TW",
+    "expiry": "2027-04-18",
+    "device_id": "755C90692A2F3E57",
+    "active": true,
+    "user": "Shihab",
+    "note": "Approved from Requests",
+    "created": "2026-04-18"
+  },
+  {
+    "key": "RNC-GBKP-E7TK-ASF9",
+    "expiry": "2027-04-18",
+    "device_id": "AFB904E26AB923EF",
+    "active": true,
+    "user": "Mahi",
+    "note": "Approved from Requests",
+    "created": "2026-04-18"
   }
 ]
