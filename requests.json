@@ -117,7 +117,10 @@
     "device_id": "AFB904E26AB923EF",
     "status": "pending",
     "requested": "2026-04-16 11:08",
-    "trial_start": "2026-04-16 11:08"
+    "trial_start": "2026-04-16 11:08",
+    "last_seen": "2026-04-19 03:57",
+    "version": "2.4.0",
+    "first_seen": "2026-04-19 03:57"
   },
   {
     "agent_name": "Momo",
