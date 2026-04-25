@@ -113,7 +113,10 @@
     "device_id": "755C90692A2F3E57",
     "status": "pending",
     "requested": "2026-04-16 10:57",
-    "trial_start": "2026-04-16 10:57"
+    "trial_start": "2026-04-16 10:57",
+    "last_seen": "2026-04-25 05:31",
+    "version": "3.0.0",
+    "first_seen": "2026-04-25 05:31"
   },
   {
     "agent_name": "Mahi",
