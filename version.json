@@ -1,6 +1,6 @@
 {
   "version": "3.1.0",
   "download_url": "https://github.com/rncall/Dashboard/releases/latest/download/DesktopRecorder.exe",
-  "auto_update": true,
+  "auto_update": false,
   "notes": "Update"
 }
